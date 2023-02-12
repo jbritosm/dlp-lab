@@ -3,7 +3,6 @@ package expression;
 public class ArithmeticExpression extends AbstractExpression {
 
     private String operator;
-
     private Expression left;
     private Expression right;
 

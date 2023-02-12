@@ -1,7 +1,6 @@
 package type;
 
-import astnode.AbstractASTNode;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class ArrayType extends AbstractType {
@@ -11,7 +10,12 @@ public class ArrayType extends AbstractType {
 
     private ArrayType() {
         super(0, 0);
+
+        this.contents = new ArrayList<>();
+        this.size = contents.size();
     }
+
+    // TODO Make accessor methods for the contents attribute.
 
     public List<Type> getContents() {
         return contents;

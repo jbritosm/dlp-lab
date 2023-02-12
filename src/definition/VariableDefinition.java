@@ -13,16 +13,6 @@ public class VariableDefinition extends AbstractDefinition implements Statement 
         this.offset = offset;
     }
 
-    @Override
-    public Type getType() {
-        return null;
-    }
-
-    @Override
-    public String getName() {
-        return null;
-    }
-
     public int getOffset() {
         return offset;
     }

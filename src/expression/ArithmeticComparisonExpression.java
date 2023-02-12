@@ -1,6 +1,7 @@
 package expression;
 
 public class ArithmeticComparisonExpression extends AbstractExpression {
+
     private String operator;
     private Expression left;
     private Expression right;

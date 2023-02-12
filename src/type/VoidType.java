@@ -1,7 +1,5 @@
 package type;
 
-import astnode.AbstractASTNode;
-
 public class VoidType extends AbstractType {
 
     private VoidType() {

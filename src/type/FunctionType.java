@@ -1,6 +1,9 @@
 package type;
 
 
+import definition.VariableDefinition;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class FunctionType extends AbstractType {
@@ -10,6 +13,9 @@ public class FunctionType extends AbstractType {
 
     private FunctionType() {
         super(0, 0);
+
+        this.variableDefinition = new ArrayList<>();
+        // How do we get the return type?
     }
 
     public List<VariableDefinition> getVariableDefinition() {

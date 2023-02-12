@@ -1,7 +1,5 @@
 package type;
 
-import astnode.AbstractASTNode;
-
 public class RealType extends AbstractType {
 
     private RealType() {

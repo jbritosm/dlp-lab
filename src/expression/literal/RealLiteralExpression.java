@@ -1,9 +1,10 @@
 package expression.literal;
 
 import astnode.AbstractASTNode;
+import expression.AbstractExpression;
 import expression.Expression;
 
-public class RealLiteralExpression extends AbstractASTNode implements Expression {
+public class RealLiteralExpression extends AbstractExpression {
 
     private double value;
 

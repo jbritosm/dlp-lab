@@ -1,7 +1,6 @@
 package type;
 
-import astnode.AbstractASTNode;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecordType extends AbstractType {
@@ -10,7 +9,11 @@ public class RecordType extends AbstractType {
 
     private RecordType() {
         super(0, 0);
+
+        fields = new ArrayList<>();
     }
+
+    // TODO Implement accessor methods for the fields Attribute.
 
     public List<RecordField> getFields() {
         return fields;
