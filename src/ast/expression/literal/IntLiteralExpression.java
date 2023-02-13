@@ -1,0 +1,18 @@
+package ast.expression.literal;
+
+import ast.expression.AbstractExpression;
+
+public class IntLiteralExpression extends AbstractExpression {
+
+    private int value;
+
+    public IntLiteralExpression(int value, int line, int column) {
+        super(line, column);
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+}
