@@ -1,26 +1,52 @@
 grammar Pmm;	
 
-program: INT_CONSTANT
-       ;
+program: ID
+;
 
+fragment
+DIGIT: [0-9]
+;
+
+INT_CONSTANT: '0' | [1-9]DIGIT*
+;
+
+fragment
+DOT: '.'
+;
+
+fragment
+EXPONENT: [eE][+-]? INT_CONSTANT
+;
+
+fragment
+MANTISSA: INT_CONSTANT DOT INT_CONSTANT EXPONENT
+        | INT_CONSTANT DOT EXPONENT
+        | DOT INT_CONSTANT EXPONENT
+        | INT_CONSTANT EXPONENT
+;
+
+REAL_CONSTANT: INT_CONSTANT DOT INT_CONSTANT
+        | INT_CONSTANT DOT
+        | DOT INT_CONSTANT
+        | MANTISSA
+;
+
+fragment
 LETTER: [a-zA-Z]
 ;
-  		 
-INT_CONSTANT: [1-9][0-9]* | '0'
+
+CHAR_CONSTANT: '\'' . '\''
+        | '\'' '\\' [nt] '\''
+        | '\'' '\\' INT_CONSTANT '\''
 ;
 
-REAL_CONSTANT: INT_CONSTANT*? DOT INT_CONSTANT+
-    | INT_CONSTANT+ DOT
+ID: ('_' | LETTER | DIGIT )+
+;
+
+WS: [\n\r\t ]+ -> skip
+;
+
+COMMENTS: ('#' .*? ('\n' | EOF) | '"""' .*? '"""') -> skip
 ;
 
 
-CHAR_CONSTANT: '\'' LETTER '\''
-;
-
-fragment DOT: .
-;
-
-
-
-TRASH: [\n\r ] -> skip
-;

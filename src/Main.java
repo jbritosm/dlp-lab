@@ -23,19 +23,20 @@ public class Main {
 			Object semanticValue = null; // We use an object because we dont know what it is. Could be a decimal, character, etc.
 			switch (token.getType()) {			
 			// TODO: Implement the lexemeToChar and lexemeToReal methods in LexerHelper
-			/*case PmmLexer.CHAR_CONSTANT:
-				semanticValue = LexerHelper.lexemeToChar(token.getText());
-				break;
-			case PmmLexer.REAL_CONSTANT:
-				semanticValue = LexerHelper.lexemeToReal(token.getText());
-				break;
-			*/
-			case PmmLexer.INT_CONSTANT:
-				semanticValue = LexerHelper.lexemeToInt(token.getText());
-				break;
-			default:
-				semanticValue = token.getText();
+				case PmmLexer.CHAR_CONSTANT:
+					semanticValue = LexerHelper.lexemeToChar(token.getText());
+					break;
+				case PmmLexer.REAL_CONSTANT:
+					semanticValue = LexerHelper.lexemeToReal(token.getText());
+					break;
+
+				case PmmLexer.INT_CONSTANT:
+					semanticValue = LexerHelper.lexemeToInt(token.getText());
+					break;
+				default:
+					semanticValue = token.getText();
 			}
+
 			// We show the token information
 			System.out.printf("Line: %d, column: %d, lexeme: '%s', token: %s, semantic value: %s.\n",
 							token.getLine(), token.getCharPositionInLine() + 1,
