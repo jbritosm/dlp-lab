@@ -48,7 +48,7 @@ public class LexerHelper {
 				return '\t';
 			}
 
-			number = content.substring(1, content.length() - 1);
+			number = content.substring(1, content.length());
 			return (char) Integer.parseInt(number);
 		}
 	}

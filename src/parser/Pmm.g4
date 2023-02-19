@@ -1,6 +1,6 @@
 grammar Pmm;	
 
-program: ID
+program:
 ;
 
 fragment
