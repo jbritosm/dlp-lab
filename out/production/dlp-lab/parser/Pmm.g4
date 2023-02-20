@@ -1,8 +1,16 @@
 grammar Pmm;	
 
-program: ID
+program: expression EOF
 ;
 
+// ####################### Parser #######################
+
+expression: INT_CONSTANT
+    | CHAR_CONSTANT
+    | expression '+' expression
+;
+
+// ####################### Lexer #######################
 fragment
 DIGIT: [0-9]
 ;
