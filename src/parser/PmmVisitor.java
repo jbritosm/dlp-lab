@@ -29,11 +29,53 @@ public interface PmmVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStatement(PmmParser.StatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PmmParser#definition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDefinition(PmmParser.DefinitionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PmmParser#function_definition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunction_definition(PmmParser.Function_definitionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PmmParser#main}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMain(PmmParser.MainContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PmmParser#function_arguments}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunction_arguments(PmmParser.Function_argumentsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PmmParser#function_definition_arguments}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunction_definition_arguments(PmmParser.Function_definition_argumentsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PmmParser#argument_definition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArgument_definition(PmmParser.Argument_definitionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PmmParser#body}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitBody(PmmParser.BodyContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PmmParser#function_body}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunction_body(PmmParser.Function_bodyContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link PmmParser#variable_definition}.
 	 * @param ctx the parse tree
