@@ -113,7 +113,7 @@ type_simple: 'int'
 ;
 
 type_complex: 'struct' '{' variable_definition* '}'
-    | ('[' INT_CONSTANT ']')+ type_simple
+    | '[' INT_CONSTANT ']' (type_simple | type_complex)
 ;
 
 // ####################### Lexer #######################
