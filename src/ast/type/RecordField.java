@@ -5,7 +5,9 @@ public class RecordField {
     private String name;
     private Type fieldType;
 
-    public RecordField(String name, Type fieldType) {
+    private int line, column;
+
+    public RecordField(String name, Type fieldType, int line, int column) {
         this.name = name;
         this.fieldType = fieldType;
     }
@@ -16,5 +18,13 @@ public class RecordField {
 
     public Type getFieldType() {
         return fieldType;
+    }
+
+    public int getLine() {
+        return this.line;
+    }
+
+    public int getColumn() {
+        return this.column;
     }
 }

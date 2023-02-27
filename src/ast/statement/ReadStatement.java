@@ -2,17 +2,19 @@ package ast.statement;
 
 import ast.expression.Expression;
 
+import java.util.List;
+
 public class ReadStatement extends AbstractStatement {
 
-    private Expression readExpression;
+    private List<Expression> readExpression;
 
-    public ReadStatement(Expression readExpression, int line, int column) {
+    public ReadStatement(List<Expression> readExpression, int line, int column) {
         super(line, column);
 
         this.readExpression = readExpression;
     }
 
-    public Expression getReadExpression() {
+    public List<Expression> getReadExpressions() {
         return readExpression;
     }
 }

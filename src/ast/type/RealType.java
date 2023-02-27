@@ -2,12 +2,15 @@ package ast.type;
 
 public class RealType extends AbstractType {
 
+    private static Type instance;
+
     private RealType() {
         super(0, 0);
     }
 
-    @Override
-    public Type createInstance() {
-        return new RealType();
+    public static Type getInstance() {
+        if(instance == null)
+            instance = new RealType();
+        return instance;
     }
 }

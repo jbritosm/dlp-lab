@@ -5,28 +5,17 @@ import java.util.List;
 
 public class ArrayType extends AbstractType {
 
-    private List<Type> contents;
     private int size;
 
-    private ArrayType() {
+    public ArrayType(int size) {
         super(0, 0);
 
-        this.contents = new ArrayList<>();
-        this.size = contents.size();
+        this.size = size;
     }
 
     // TODO Make accessor methods for the contents attribute.
 
-    public List<Type> getContents() {
-        return contents;
-    }
-
     public int getSize() {
         return size;
-    }
-
-    @Override
-    public Type createInstance() {
-        return new ArrayType();
     }
 }

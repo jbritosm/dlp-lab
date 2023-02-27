@@ -12,25 +12,25 @@ public class LexerHelper {
 		return -1;
 	}
 
-    public static Object lexemeToReal(String str) {
+    public static Double lexemeToReal(String str) {
 		try {
 			return Double.parseDouble(str);
 		}
 		catch(NumberFormatException e) {
 			System.out.println(e);
 		}
-		return -1;
+		return -1.0;
     }
 
 
-	public static Object lexemeToChar(String str) {
+	public static Character lexemeToChar(String str) {
 		try {
 			return checkChar(str);
 		}
 		catch(NumberFormatException e) {
 			System.out.println(e);
 		}
-		return -1;
+		return '\0';
 	}
 
 	private static Character checkChar(String str) {

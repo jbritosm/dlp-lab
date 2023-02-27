@@ -2,17 +2,19 @@ package ast.statement;
 
 import ast.expression.Expression;
 
+import java.util.List;
+
 public class PrintStatement extends AbstractStatement {
 
-    private Expression printExpression;
+    private List<Expression> printExpressions;
 
-    public PrintStatement(Expression printExpression, int line, int column) {
+    public PrintStatement(List<Expression> printExpressions, int line, int column) {
         super(line, column);
 
-        this.printExpression = printExpression;
+        this.printExpressions = printExpressions;
     }
 
-    public Expression getPrintExpression() {
-        return printExpression;
+    public List<Expression> getPrintExpressions() {
+        return printExpressions;
     }
 }

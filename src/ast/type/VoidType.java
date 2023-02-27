@@ -2,12 +2,15 @@ package ast.type;
 
 public class VoidType extends AbstractType {
 
+    private static Type instance;
+
     private VoidType() {
         super(0, 0);
     }
 
-    @Override
-    public Type createInstance() {
-        return new VoidType();
+    public static Type getInstance() {
+        if(instance == null)
+            instance = new VoidType();
+        return instance;
     }
 }

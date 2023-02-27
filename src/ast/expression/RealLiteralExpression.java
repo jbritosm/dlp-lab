@@ -6,7 +6,7 @@ public class RealLiteralExpression extends AbstractExpression {
 
     private double value;
 
-    public RealLiteralExpression(int value, int line, int column) {
+    public RealLiteralExpression(Double value, int line, int column) {
         super(line, column);
         this.value = value;
     }
