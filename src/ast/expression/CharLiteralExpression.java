@@ -1,4 +1,4 @@
-package ast.expression.literal;
+package ast.expression;
 
 import ast.expression.AbstractExpression;
 

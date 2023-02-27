@@ -1,34 +1,68 @@
 grammar Pmm;	
 
-program: definition* main EOF
+@header {
+    import ast.astnode.*;
+    import ast.definition.*;
+    import ast.expression.*;
+    import ast.statement.*;
+    import ast.type.*;
+}
+
+program returns [Program ast]: definition* main EOF
 ;
 
 // ####################### Parser #######################
 
-expression: INT_CONSTANT
-    | CHAR_CONSTANT
-    | REAL_CONSTANT
-    | ID '(' function_arguments ')'
-    | ID
-    | '(' expression ')'
-    | expression '[' expression ']'
-    | expression '.' ID
-    | '(' type_simple ')' expression
-    | '-' expression
-    | '!' expression
-    | expression ('*'|'/'|'%') expression
-    | expression ('+'|'-') expression
-    | expression ('>'|'>='|'<'|'=<'|'!='|'==') expression
-    | expression ('&&'|'||') expression
+expression returns [Expression ast]:
+    ID {
+                        $ast = new VariableExpression($ID.getText()
+                        , $ID.getLine()
+                        , $ID.getCharPositionInLine() + 1);
+    } // Identifier
+    | INT_CONSTANT {
+                        $ast = new IntLiteralExpression(LexerHelper.lexemeToInt($INT_CONSTANT.getText())
+                        , $INT_CONSTANT.getLine()
+                        , $INT_CONSTANT.getCharPositionInLine() + 1);
+    } // Int
+    | CHAR_CONSTANT {
+                        $ast = new CharLiteralExpression(LexerHelper.lexemeToChar($CHAR_CONSTANT.getText())
+                        , $CHAR_CONSTANT.getLine()
+                        , $CHAR_CONSTANT.getCharPositionInLine() + 1);
+    } // Char
+    | REAL_CONSTANT {
+                        $ast = new RealLiteralExpression(LexerHelper.lexemeToReal($REAL_CONSTANT.getText))
+                        , $REAL_CONSTANT.getLine()
+                        , $REAL_CONSTANT.getCharPositionInLine() + 1);
+    } // Double
+    | ID '(' fi = function_arguments ')' {
+                        $ast = new FunctionInvocation();
+    } // Function invocation
+    | '(' expression ')' // Parenthesis
+    | expression '[' expression ']' // Array access
+    | expression '.' ID // Field access
+    | '(' type_simple ')' expression // Cast
+    | '-' expression // Unary minus
+    | '!' expression // Negation
+    | expression ('*'|'/'|'%') expression // Product, Division, Modulo
+    | exp1 = expression OP = ('+'|'-') exp2 = expression {
+                    $ast = new ArithmeticExpression(
+                    $OP.text
+                    , $exp1.ast
+                    , $exp2.ast
+                    , $exp1.start.getLine()
+                    , $exp1.start.getCharPositionInLine() + 1);
+                     } // Plus, Minus Not a token but a non terminal
+    | expression ('>'|'>='|'<'|'=<'|'!='|'==') expression // Arithmetic comparison
+    | expression ('&&'|'||') expression // Logical comparison
 ;
 
-statement: 'print' (expression',')* expression ';'
-    | 'input' (expression',')* expression ';'
-    | <assoc=right> expression '=' expression ';'
-    | 'if' expression ':' body ('else'':' body | )
-    | 'while' expression ':' body
-    | 'return' expression ';'
-    | ID '(' function_arguments ')' ';'
+statement: 'print' (expression',')* expression ';' // Print
+    | 'input' (expression',')* expression ';' // Input
+    | expression '=' expression ';' // Assignment
+    | 'if' expression ':' body ('else'':' body | ) // IfElse (the else part can be epsilon)
+    | 'while' expression ':' body // While
+    | 'return' expression ';' // Return
+    | ID '(' function_arguments ')' ';' // Function invocation
 ;
 
 definition: function_definition
@@ -41,6 +75,9 @@ function_definition: 'def' ID '(' function_definition_arguments ')'':' (type_sim
 main: 'def' 'main' '(' function_definition_arguments ')'':' function_body
 ;
 
+function_body: '{' variable_definition* statement* '}'
+;
+
 /*
 Function arguments refer to the arguments passed to:
     - Function invocations as expressions.
@@ -49,7 +86,18 @@ Function arguments refer to the arguments passed to:
 This function invocations can receive a single expression, a sequence of
 expressions separated by a comma or no expressions at all.
 */
-function_arguments: ((expression (',' expression)*) | )
+function_arguments returns[List<Expression> ast = new ArrayList<Expression>()]:
+        ((exp1 = expression {
+                            $ast.add($exp1);
+                         }
+                         (',' exp2 = expression
+                            {
+                                $ast.add($exp2);
+                            }
+                            )*)
+                            | /* epsilon */ {
+                                $ast = $ast;
+                            })
 ;
 
 /*
@@ -77,9 +125,6 @@ argument_definition: ID ':' type_simple
 body: (statement | '{'statement+'}')
 ;
 
-function_body: '{' variable_definition* statement* '}'
-;
-
 /*
 In case of variable definitions we have the following possibilities:
 
@@ -103,16 +148,17 @@ In case of variable definitions we have the following possibilities:
     vector: [10][5]int;
 
 */
-variable_definition: ID (','ID)* ':' type_simple ';'
+variable_definition returns [Definition ast]:
+      ID {} (','ID {} )* ':' type1 = type_simple ';' {$ast = new VariableDefinition(); }
     | ID ':' type_complex ';'
 ;
 
-type_simple: 'int'
-    | 'double'
-    | 'char'
+type_simple returns [Type ast]: 'int' { $ast = new IntType().createInstance(); }
+    | 'double' { $ast = new DoubleType().createInstance(); }
+    | 'char' { $ast = new CharType().createInstance(); }
 ;
 
-type_complex: 'struct' '{' variable_definition* '}'
+type_complex returns [Type ast]: 'struct' '{' variable_definition* '}'
     | '[' INT_CONSTANT ']' (type_simple | type_complex)
 ;
 
