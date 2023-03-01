@@ -86,15 +86,16 @@ expression returns [Expression ast]:
                     , $type_simple.ast.getLine()
                     , $type_simple.ast.getColumn());
                      } // Cast
-    | '-' expression {
+    | '-' exp1 = expression {
                     $ast = new UnaryMinusExpression(
-                    $expression.ast
-                    , $expression.ast.getLine()
-                    , $expression.ast.getColumn());
+                    $exp1.ast
+                    , $exp1.ast.getLine()
+                    , $exp1.ast.getColumn());
                      } // Unary minus
-    | '!' expression { $ast = new NotExpression($expression.ast
-                    , $expression.ast.getLine()
-                    , $expression.ast.getColumn());
+    | '!' exp1 = expression {
+                    $ast = new NotExpression($exp1.ast
+                    , $exp1.ast.getLine()
+                    , $exp1.ast.getColumn());
                      } // Negation
     | exp1 = expression OP = ('*'|'/'|'%') exp2 = expression {
                       $ast = new ArithmeticExpression(
@@ -137,26 +138,32 @@ statement returns [Statement ast] locals [List<Expression> exps = new ArrayList<
      { $ast = new ReadStatement($exps, $exp1.ast.getLine(), $exp1.ast.getColumn()); }// Input
     | exp1 = expression '=' exp2 = expression { $ast = new AssignmentStatement($exp1.ast, $exp2.ast, $exp1.ast.getLine(), $exp1.ast.getColumn()); } ';' // Assignment
     | IF = 'if' exp1 = expression ':' ifB = body ('else'':' elseB = body { $elseBody = $elseB.ast; } | /* epsilon */  { $ast = $ast; } ) { $ast = new IfElseStatement($exp1.ast, $ifB.ast, $elseBody, $IF.getLine(), $IF.getCharPositionInLine() + 1); } // IfElse (the else part can be epsilon)
-    | WHILE = 'while' expression ':' body { $ast = new WhileStatement($expression.ast, $body.ast, $WHILE.getLine(), $WHILE.getCharPositionInLine() + 1); } // While
-    | RETURN = 'return' expression { $ast = new ReturnStatement($expression.ast, $RETURN.getLine(), $RETURN.getCharPositionInLine() + 1); } ';' // Return
-    | ID '(' function_arguments ')' { $ast = new FunctionInvocation(new VariableExpression($ID.getText(), $ID.getLine(), $ID.getCharPositionInLine() + 1), $function_arguments.ast, $ID.getLine(), $ID.getCharPositionInLine() + 1); } ';' // Function invocation
+    | WHILE = 'while' exp1 = expression ':' wB = body { $ast = new WhileStatement($exp1.ast, $wB.ast, $WHILE.getLine(), $WHILE.getCharPositionInLine() + 1); } // While
+    | RETURN = 'return' exp1 = expression { $ast = new ReturnStatement($exp1.ast, $RETURN.getLine(), $RETURN.getCharPositionInLine() + 1); } ';' // Return
+    | ID '(' fArgs = function_arguments ')' { $ast = new FunctionInvocation(new VariableExpression($ID.getText(), $ID.getLine(), $ID.getCharPositionInLine() + 1), $fArgs.ast, $ID.getLine(), $ID.getCharPositionInLine() + 1); } ';' // Function invocation
 ;
 
+/*
+    Definition of functions EXCEPT main.
+*/
 function_definition returns[FunctionDefinition ast] locals [Type returnType]: DEF = 'def' ID '('
-                    function_parameter_definition
+                    funcParDef = function_parameter_definition
                     ')'':'
                     ( ts = type_simple { $returnType = $ts.ast; } | vt = void_type { $returnType = $vt.ast; } )
-                    function_body {
+                    funcB = function_body {
                     $ast = new FunctionDefinition(
-                                            new FunctionType($function_parameter_definition.ast, $returnType),
+                                            new FunctionType($funcParDef.ast, $returnType),
                                             $ID.getText(),
-                                            $function_body.ast,
+                                            $funcB.ast,
                                             $DEF.getLine(),
                                             $DEF.getCharPositionInLine() + 1
                     );
                     }
 ;
 
+/*
+    Body of functions formed by variable definitions and statements, in that order.
+*/
 function_body returns [List<Statement> ast = new ArrayList<>()]:
         '{' (varDef = variable_definition { $ast.addAll($varDef.ast); } )* ( st = statement { $ast.add($st.ast); } )* '}'
 ;
@@ -204,9 +211,12 @@ parameter_definition returns[VariableDefinition ast]: ID ':' t1 = type_simple {
                      }
 ;
 
+/*
+    Body of If, else and While statements NOT FUNCTIONS!!!!.
+*/
 body returns [List<Statement> ast = new ArrayList<>()]:
             (st1 = statement { $ast.add($st1.ast); }
-            | '{' (st2 = statement { $ast.add($st2.ast); } )+ '}')
+            | '{' (st2 = statement { $ast.add($st2.ast); } )* '}')
 ;
 
 /*
@@ -264,7 +274,8 @@ In case of variable definitions we have the following possibilities:
 */
 
 
-/* First approach
+/* First approach its OK but dirtier than the second approach.
+
 variable_definition returns [List<VariableDefinition> ast = new ArrayList<>()] locals [List<Token> identifiers = new ArrayList<>()]:
         ID1 = ID { $identifiers.add($ID1); } (',' ID2 = ID { $identifiers.add($ID2); } )*
         ':' t = type { for(Token token: $identifiers){
@@ -274,14 +285,17 @@ variable_definition returns [List<VariableDefinition> ast = new ArrayList<>()] l
 ;
 */
 
-/* Tutorial group approach */
+/*
+    Tutorial group approach:
+
+    Pass a null type to the new VariableDefinition(...) and after t = type
+    loop the list of VariableDefinition ast setting the types of each
+    VariableDefinition.
+*/
 variable_definition returns [List<VariableDefinition> ast = new ArrayList<>()]:
         ID1 = ID { $ast.add(new VariableDefinition(null, $ID1.getText(), $ID1.getLine(), $ID1.getCharPositionInLine() + 1)); }
         (',' ID2 = ID { $ast.add(new VariableDefinition(null, $ID2.getText(), $ID2.getLine(), $ID2.getCharPositionInLine() + 1)); } )*
-        ':' t = type { for(VariableDefinition def: $ast) {
-                            def.setType($t.ast);
-                       }
-        } ';'
+        ':' t = type { for(VariableDefinition def: $ast) { def.setType($t.ast); } } ';'
 ;
 
 /*
@@ -300,6 +314,18 @@ type_simple returns [Type ast]: 'int' { $ast = IntType.getInstance(); }
                                 | 'char' { $ast = CharType.getInstance(); }
 ;
 
+/*
+    Inside records, record fields can be defined as:
+    a, b, c: int;. Therefore we define a rule which will
+    be triggered if one or more variable definitions are
+    inside a record syntax.
+
+    For each variable definition we create a new record field and
+    add it to an auxiliar list.
+
+    After all variable definitions are processed we create a new RecordType
+    object initialized with the list of record fields previously populated.
+*/
 type_complex returns [Type ast] locals [List<RecordField> recordFields = new ArrayList<>()]:
         '[' INT_CONSTANT ']' t1 = type { $ast = new ArrayType($t1.ast, LexerHelper.lexemeToInt($INT_CONSTANT.getText())); }
         /*| 'struct' '{' (rf = record_field { $recordFields.add($rf.ast); })* '}' { $ast = new RecordType($recordFields); }*/
@@ -308,9 +334,6 @@ type_complex returns [Type ast] locals [List<RecordField> recordFields = new Arr
 ;
 
 void_type returns [Type ast]: { $ast = VoidType.getInstance(); }
-;
-
-record_field returns [RecordField ast]: ID (','ID)* ':' type { $ast = new RecordField($ID.getText(), $type.ast, $ID.getLine(), $ID.getCharPositionInLine() + 1); } ';'
 ;
 
 // ####################### Lexer #######################
