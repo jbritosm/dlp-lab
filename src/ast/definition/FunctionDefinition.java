@@ -18,4 +18,11 @@ public class FunctionDefinition extends AbstractDefinition {
     public List<Statement> getStatements() {
         return statements;
     }
+
+    @Override
+    public String toString() {
+        return "FunctionDefinition{" +
+                "statements=" + statements +
+                '}';
+    }
 }

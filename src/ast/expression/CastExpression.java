@@ -22,4 +22,12 @@ public class CastExpression extends AbstractExpression {
     public Expression getExpressionToCast() {
         return expressionToCast;
     }
+
+    @Override
+    public String toString() {
+        return "CastExpression{" +
+                "targetType=" + targetType +
+                ", expressionToCast=" + expressionToCast +
+                '}';
+    }
 }

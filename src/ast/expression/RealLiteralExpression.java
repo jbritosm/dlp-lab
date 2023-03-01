@@ -15,4 +15,10 @@ public class RealLiteralExpression extends AbstractExpression {
         return value;
     }
 
+    @Override
+    public String toString() {
+        return "RealLiteralExpression{" +
+                "value=" + value +
+                '}';
+    }
 }

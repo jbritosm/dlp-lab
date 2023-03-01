@@ -15,4 +15,10 @@ public class CharLiteralExpression extends AbstractExpression {
         return value;
     }
 
+    @Override
+    public String toString() {
+        return "CharLiteralExpression{" +
+                "value=" + value +
+                '}';
+    }
 }

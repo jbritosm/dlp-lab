@@ -14,7 +14,7 @@ public class FunctionType extends AbstractType {
     public FunctionType(List<VariableDefinition> arguments, Type returnType) {
         super(0, 0);
 
-        this.arguments = new ArrayList<>();
+        this.arguments = arguments;
         this.returnType = returnType;
     }
 
@@ -24,5 +24,13 @@ public class FunctionType extends AbstractType {
 
     public Type getReturnType() {
         return returnType;
+    }
+
+    @Override
+    public String toString() {
+        return "FunctionType{" +
+                "arguments=" + arguments +
+                ", returnType=" + returnType +
+                '}';
     }
 }

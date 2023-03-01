@@ -26,4 +26,12 @@ public class FunctionInvocation extends AbstractStatement implements Expression 
     public VariableExpression getVariableExpression() {
         return variableExpression;
     }
+
+    @Override
+    public String toString() {
+        return "FunctionInvocation{" +
+                "variableExpression=" + variableExpression +
+                ", arguments=" + arguments +
+                '}';
+    }
 }

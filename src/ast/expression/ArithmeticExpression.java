@@ -25,4 +25,13 @@ public class ArithmeticExpression extends AbstractExpression {
     public Expression getRight() {
         return right;
     }
+
+    @Override
+    public String toString() {
+        return "ArithmeticExpression{" +
+                "operator='" + operator + '\'' +
+                ", left=" + left +
+                ", right=" + right +
+                '}';
+    }
 }

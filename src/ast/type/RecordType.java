@@ -18,4 +18,11 @@ public class RecordType extends AbstractType {
     public List<RecordField> getFields() {
         return fields;
     }
+
+    @Override
+    public String toString() {
+        return "RecordType{" +
+                "fields=" + fields +
+                '}';
+    }
 }

@@ -22,4 +22,12 @@ public class ArrayIndexExpression extends AbstractExpression {
     public Expression getIndexed() {
         return indexed;
     }
+
+    @Override
+    public String toString() {
+        return "ArrayIndexExpression{" +
+                "indexed=" + indexed +
+                ", indexer=" + indexer +
+                '}';
+    }
 }

@@ -24,4 +24,12 @@ public class AbstractDefinition extends AbstractASTNode implements Definition {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String toString() {
+        return "AbstractDefinition{" +
+                "type=" + type +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

@@ -29,4 +29,13 @@ public class IfElseStatement extends AbstractStatement {
     public List<Statement> getElseBody() {
         return elseBody;
     }
+
+    @Override
+    public String toString() {
+        return "IfElseStatement{" +
+                "condition=" + condition +
+                ", ifBody=" + ifBody +
+                ", elseBody=" + elseBody +
+                '}';
+    }
 }

@@ -13,4 +13,9 @@ public class VoidType extends AbstractType {
             instance = new VoidType();
         return instance;
     }
+
+    @Override
+    public String toString() {
+        return "VoidType{}";
+    }
 }

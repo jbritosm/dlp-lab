@@ -15,4 +15,10 @@ public class IntLiteralExpression extends AbstractExpression {
         return value;
     }
 
+    @Override
+    public String toString() {
+        return "IntLiteralExpression{" +
+                "value=" + value +
+                '}';
+    }
 }

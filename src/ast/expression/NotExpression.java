@@ -13,4 +13,11 @@ public class NotExpression extends AbstractExpression {
     public Expression getExpressionToNegate() {
         return expressionToNegate;
     }
+
+    @Override
+    public String toString() {
+        return "NotExpression{" +
+                "expressionToNegate=" + expressionToNegate +
+                '}';
+    }
 }

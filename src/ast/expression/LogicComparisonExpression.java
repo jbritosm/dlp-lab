@@ -25,4 +25,13 @@ public class LogicComparisonExpression extends AbstractExpression {
     public Expression getRight() {
         return right;
     }
+
+    @Override
+    public String toString() {
+        return "LogicComparisonExpression{" +
+                "operator='" + operator + '\'' +
+                ", left=" + left +
+                ", right=" + right +
+                '}';
+    }
 }

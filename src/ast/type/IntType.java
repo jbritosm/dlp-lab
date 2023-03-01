@@ -14,4 +14,9 @@ public class IntType extends AbstractType {
             instance = new IntType();
         return instance;
     }
+
+    @Override
+    public String toString() {
+        return "IntType{}";
+    }
 }

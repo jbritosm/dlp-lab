@@ -23,4 +23,12 @@ public class WhileStatement extends AbstractStatement {
     public List<Statement> getBody() {
         return body;
     }
+
+    @Override
+    public String toString() {
+        return "WhileStatement{" +
+                "condition=" + condition +
+                ", body=" + body +
+                '}';
+    }
 }

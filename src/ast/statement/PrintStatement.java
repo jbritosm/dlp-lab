@@ -17,4 +17,11 @@ public class PrintStatement extends AbstractStatement {
     public List<Expression> getPrintExpressions() {
         return printExpressions;
     }
+
+    @Override
+    public String toString() {
+        return "PrintStatement{" +
+                "printExpressions=" + printExpressions +
+                '}';
+    }
 }

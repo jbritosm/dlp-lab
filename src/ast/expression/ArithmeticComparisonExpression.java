@@ -26,4 +26,13 @@ public class ArithmeticComparisonExpression extends AbstractExpression {
         return right;
     }
 
+
+    @Override
+    public String toString() {
+        return "ArithmeticComparisonExpression{" +
+                "operator='" + operator + '\'' +
+                ", left=" + left +
+                ", right=" + right +
+                '}';
+    }
 }

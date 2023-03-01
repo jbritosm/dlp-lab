@@ -9,7 +9,10 @@ grammar Pmm;
     import ast.functioninvocation.*;
 }
 
-program returns [Program ast]: (variable_definition | function_definition)* main EOF
+program returns [Program ast] locals [List<Definition> definitions = new ArrayList<>()]:
+                         (variable_definition { $definitions.addAll($variable_definition.ast); }
+                         | function_definition { $definitions.add($function_definition.ast); } )*
+                          main { $definitions.add($main.ast); } { $ast = new Program($definitions); } EOF
 ;
 
 // ####################### Parser #######################
@@ -51,12 +54,12 @@ expression returns [Expression ast]:
                         , $exp1.ast.getLine()
                         , $exp1.ast.getColumn());
                          } // Array access
-    | expression '.' ID {
+    | exp1 = expression '.' ID {
                     $ast = new FieldAccessExpression(
-                    $expression.ast
+                    $exp1.ast
                     , $ID.getText()
-                    , $expression.ast.getLine()
-                    , $expression.ast.getColumn());
+                    , $exp1.ast.getLine()
+                    , $exp1.ast.getColumn());
                      } // Field access
     | '(' type_simple ')' expression {
                     $ast = new CastExpression(
@@ -115,7 +118,7 @@ statement returns [Statement ast] locals [List<Expression> exps = new ArrayList<
     | 'input' exp1 = expression { $exps.add($exp1.ast); } (',' exp2 = expression { $exps.add($exp2.ast); })* ';'
      { $ast = new ReadStatement($exps, $exp1.ast.getLine(), $exp1.ast.getColumn()); }// Input
     | exp1 = expression '=' exp2 = expression { $ast = new AssignmentStatement($exp1.ast, $exp2.ast, $exp1.ast.getLine(), $exp1.ast.getColumn()); } ';' // Assignment
-    | IF = 'if' exp1 = expression ':' ifB = body ('else'':' elseB = body { $elseBody = $elseB.ast; } |  { $ast = $ast; } ) { $ast = new IfElseStatement($exp1.ast, $ifB.ast, $elseBody, $IF.getLine(), $IF.getCharPositionInLine() + 1); } // IfElse (the else part can be epsilon)
+    | IF = 'if' exp1 = expression ':' ifB = body ('else'':' elseB = body { $elseBody = $elseB.ast; } | /* epsilon */  { $ast = $ast; } ) { $ast = new IfElseStatement($exp1.ast, $ifB.ast, $elseBody, $IF.getLine(), $IF.getCharPositionInLine() + 1); } // IfElse (the else part can be epsilon)
     | WHILE = 'while' expression ':' body { $ast = new WhileStatement($expression.ast, $body.ast, $WHILE.getLine(), $WHILE.getCharPositionInLine() + 1); } // While
     | RETURN = 'return' expression { $ast = new ReturnStatement($expression.ast, $RETURN.getLine(), $RETURN.getCharPositionInLine() + 1); } ';' // Return
     | ID '(' function_arguments ')' { $ast = new FunctionInvocation(new VariableExpression($ID.getText(), $ID.getLine(), $ID.getCharPositionInLine() + 1), $function_arguments.ast, $ID.getLine(), $ID.getCharPositionInLine() + 1); } ';' // Function invocation
@@ -151,7 +154,8 @@ main returns [FunctionDefinition ast]: DEF = 'def' MAIN = 'main' '('
                     }
 ;
 
-function_body returns [List<Statement> ast = new ArrayList<Statement>()]: '{' (varDef = variable_definition { $ast.addAll($varDef.ast); } )* ( st = statement { $ast.add($st.ast); } )* '}'
+function_body returns [List<Statement> ast = new ArrayList<>()]:
+        '{' (varDef = variable_definition { $ast.addAll($varDef.ast); } )* ( st = statement { $ast.add($st.ast); } )* '}'
 ;
 
 /*
@@ -163,9 +167,8 @@ This function invocations can receive a single expression, a sequence of
 expressions separated by a comma or no expressions at all.
 */
 function_arguments returns[List<Expression> ast = new ArrayList<Expression>()]:
-        ((exp1 = expression { $ast.add($exp1.ast); }
-        (',' exp2 = expression { $ast.add($exp2.ast); } )*)
-        | /* epsilon */ { $ast = $ast; })
+        (exp1 = expression { $ast.add($exp1.ast); } (',' exp2 = expression { $ast.add($exp2.ast); } )*)
+        | /* epsilon */ { $ast = $ast; }
 ;
 
 /*
@@ -200,7 +203,7 @@ parameter_definition returns[VariableDefinition ast]: ID ':' t1 = type_simple {
 
 body returns [List<Statement> ast = new ArrayList<>()]:
             (st1 = statement { $ast.add($st1.ast); }
-            | '{' (st2 = statement { $ast.add($st2.ast); } )+'}')
+            | '{' (st2 = statement { $ast.add($st2.ast); } )+ '}')
 ;
 
 /*
@@ -283,7 +286,7 @@ type_simple returns [Type ast]: 'int' { $ast = IntType.getInstance(); }
 ;
 
 type_complex returns [Type ast] locals [List<RecordField> recordFields = new ArrayList<>()]:
-        '[' INT_CONSTANT ']' type { $ast = new ArrayType(LexerHelper.lexemeToInt($INT_CONSTANT.getText())); }
+        '[' INT_CONSTANT ']' t1 = type { $ast = new ArrayType($t1.ast, LexerHelper.lexemeToInt($INT_CONSTANT.getText())); }
         | 'struct' '{' (rf = record_field { $recordFields.add($rf.ast); })* '}' { $ast = new RecordType($recordFields); }
 ;
 

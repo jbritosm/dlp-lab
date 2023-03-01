@@ -17,4 +17,11 @@ public class ReadStatement extends AbstractStatement {
     public List<Expression> getReadExpressions() {
         return readExpression;
     }
+
+    @Override
+    public String toString() {
+        return "ReadStatement{" +
+                "readExpression=" + readExpression +
+                '}';
+    }
 }

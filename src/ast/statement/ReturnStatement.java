@@ -15,4 +15,11 @@ public class ReturnStatement extends AbstractStatement {
     public Expression getReturnExpression() {
         return returnExpression;
     }
+
+    @Override
+    public String toString() {
+        return "ReturnStatement{" +
+                "returnExpression=" + returnExpression +
+                '}';
+    }
 }

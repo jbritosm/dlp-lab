@@ -13,4 +13,9 @@ public class RealType extends AbstractType {
             instance = new RealType();
         return instance;
     }
+
+    @Override
+    public String toString() {
+        return "RealType{}";
+    }
 }

@@ -13,4 +13,11 @@ public class VariableExpression extends AbstractExpression {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String toString() {
+        return "VariableExpression{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

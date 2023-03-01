@@ -20,4 +20,12 @@ public class FieldAccessExpression extends AbstractExpression {
     public Expression getAccessed() {
         return accessed;
     }
+
+    @Override
+    public String toString() {
+        return "FieldAccessExpression{" +
+                "accessed=" + accessed +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
