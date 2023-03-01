@@ -9,10 +9,28 @@ grammar Pmm;
     import ast.functioninvocation.*;
 }
 
-program returns [Program ast] locals [List<Definition> definitions = new ArrayList<>()]:
+program returns [Program ast] locals [List<Definition> definitions = new ArrayList<>(), FunctionDefinition main]:
+
+                         /* Sequence of variable and function definitions */
                          (variable_definition { $definitions.addAll($variable_definition.ast); }
                          | function_definition { $definitions.add($function_definition.ast); } )*
-                          main { $definitions.add($main.ast); } { $ast = new Program($definitions); } EOF
+
+                         /* main */
+                         DEF = 'def' MAIN = 'main' '('
+                                             function_parameter_definition
+                                             ')'':'
+                                             void_type
+                                             function_body {
+                                             $main = new FunctionDefinition(
+                                                 new FunctionType($function_parameter_definition.ast, $void_type.ast),
+                                                 $MAIN.getText(),
+                                                 $function_body.ast,
+                                                 $DEF.getLine(),
+                                                 $DEF.getCharPositionInLine() + 1
+                                             );
+                                             }
+
+                         { $definitions.add($main); } { $ast = new Program($definitions); } EOF
 ;
 
 // ####################### Parser #######################
@@ -139,21 +157,6 @@ function_definition returns[FunctionDefinition ast] locals [Type returnType]: DE
                     }
 ;
 
-main returns [FunctionDefinition ast]: DEF = 'def' MAIN = 'main' '('
-                    function_parameter_definition
-                    ')'':'
-                    void_type
-                    function_body {
-                    $ast = new FunctionDefinition(
-                        new FunctionType($function_parameter_definition.ast, $void_type.ast),
-                        $MAIN.getText(),
-                        $function_body.ast,
-                        $DEF.getLine(),
-                        $DEF.getCharPositionInLine() + 1
-                    );
-                    }
-;
-
 function_body returns [List<Statement> ast = new ArrayList<>()]:
         '{' (varDef = variable_definition { $ast.addAll($varDef.ast); } )* ( st = statement { $ast.add($st.ast); } )* '}'
 ;
@@ -257,14 +260,26 @@ In case of variable definitions we have the following possibilities:
         a: int;
     };
 
-    a, b, c: int;
-
     Which is not allowed in our language.
 */
+
+
+/* First approach
 variable_definition returns [List<VariableDefinition> ast = new ArrayList<>()] locals [List<Token> identifiers = new ArrayList<>()]:
         ID1 = ID { $identifiers.add($ID1); } (',' ID2 = ID { $identifiers.add($ID2); } )*
         ':' t = type { for(Token token: $identifiers){
                             $ast.add(new VariableDefinition($t.ast, token.getText(), token.getLine(), token.getCharPositionInLine() + 1));
+                       }
+        } ';'
+;
+*/
+
+/* Tutorial group approach */
+variable_definition returns [List<VariableDefinition> ast = new ArrayList<>()]:
+        ID1 = ID { $ast.add(new VariableDefinition(null, $ID1.getText(), $ID1.getLine(), $ID1.getCharPositionInLine() + 1)); }
+        (',' ID2 = ID { $ast.add(new VariableDefinition(null, $ID2.getText(), $ID2.getLine(), $ID2.getCharPositionInLine() + 1)); } )*
+        ':' t = type { for(VariableDefinition def: $ast) {
+                            def.setType($t.ast);
                        }
         } ';'
 ;
@@ -287,13 +302,14 @@ type_simple returns [Type ast]: 'int' { $ast = IntType.getInstance(); }
 
 type_complex returns [Type ast] locals [List<RecordField> recordFields = new ArrayList<>()]:
         '[' INT_CONSTANT ']' t1 = type { $ast = new ArrayType($t1.ast, LexerHelper.lexemeToInt($INT_CONSTANT.getText())); }
-        | 'struct' '{' (rf = record_field { $recordFields.add($rf.ast); })* '}' { $ast = new RecordType($recordFields); }
+        /*| 'struct' '{' (rf = record_field { $recordFields.add($rf.ast); })* '}' { $ast = new RecordType($recordFields); }*/
+        | 'struct' '{' (varDef = variable_definition { for(VariableDefinition def : $varDef) { $recordFields.add(new RecordField()); }})* '}'
 ;
 
 void_type returns [Type ast]: { $ast = VoidType.getInstance(); }
 ;
 
-record_field returns [RecordField ast]: ID ':' type { $ast = new RecordField($ID.getText(), $type.ast, $ID.getLine(), $ID.getCharPositionInLine() + 1); } ';'
+record_field returns [RecordField ast]: ID (','ID)* ':' type { $ast = new RecordField($ID.getText(), $type.ast, $ID.getLine(), $ID.getCharPositionInLine() + 1); } ';'
 ;
 
 // ####################### Lexer #######################

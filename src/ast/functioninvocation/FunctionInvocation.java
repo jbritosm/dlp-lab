@@ -1,12 +1,13 @@
 package ast.functioninvocation;
 
+import ast.expression.AbstractExpression;
 import ast.expression.Expression;
 import ast.expression.VariableExpression;
-import ast.statement.AbstractStatement;
+import ast.statement.Statement;
 
 import java.util.List;
 
-public class FunctionInvocation extends AbstractStatement implements Expression {
+public class FunctionInvocation extends AbstractExpression implements Statement {
 
     // We use a variable to store the name of the function.
     private VariableExpression variableExpression;
