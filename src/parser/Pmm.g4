@@ -303,7 +303,8 @@ type_simple returns [Type ast]: 'int' { $ast = IntType.getInstance(); }
 type_complex returns [Type ast] locals [List<RecordField> recordFields = new ArrayList<>()]:
         '[' INT_CONSTANT ']' t1 = type { $ast = new ArrayType($t1.ast, LexerHelper.lexemeToInt($INT_CONSTANT.getText())); }
         /*| 'struct' '{' (rf = record_field { $recordFields.add($rf.ast); })* '}' { $ast = new RecordType($recordFields); }*/
-        | 'struct' '{' (varDef = variable_definition { for(VariableDefinition def : $varDef) { $recordFields.add(new RecordField()); }})* '}'
+        | 'struct' '{' (varDef = variable_definition { for(VariableDefinition def : $varDef.ast) { $recordFields.add(new RecordField(def.getName(), def.getType(), def.getLine(), def.getColumn())); }})* '}'
+        { $ast = new RecordType($recordFields); }
 ;
 
 void_type returns [Type ast]: { $ast = VoidType.getInstance(); }
