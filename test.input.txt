@@ -81,14 +81,14 @@ def main(): {
 		print 'E','r','r','o','r','\n';
 	}
 	show();
-	
+
 	date.day = 4;
 	date.mounth = 3;
 	date.year = 2020;
-	
+
 	character = (char)date.day;
 	real = 4.5 + 4. * 3e+3 - 5.4E-3;
-	
+
 	#error:int; # Uncomment to test
 }
 

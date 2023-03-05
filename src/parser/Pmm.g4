@@ -261,20 +261,17 @@ In case of variable definitions we have the following possibilities:
         	character: char;
     };
 
+    a, b, c: struct {
+            a: int;
+        };
+
     Arrays:
     vector: [10][5]int;
-
-    We do not use a single type rule because it could detect:
-
-    a, b, c: struct {
-        a: int;
-    };
-
-    Which is not allowed in our language.
 */
 
 
-/* First approach its OK but dirtier than the second approach.
+/*
+    First approach its OK but dirtier than the second approach.
 
 variable_definition returns [List<VariableDefinition> ast = new ArrayList<>()] locals [List<Token> identifiers = new ArrayList<>()]:
         ID1 = ID { $identifiers.add($ID1); } (',' ID2 = ID { $identifiers.add($ID2); } )*
@@ -325,6 +322,10 @@ type_simple returns [Type ast]: 'int' { $ast = IntType.getInstance(); }
 
     After all variable definitions are processed we create a new RecordType
     object initialized with the list of record fields previously populated.
+
+    As it can be seen in the following rule, inside structs we do not detect record
+    fields but variable definitions. The only difference is the object we create which
+    is a RecordField object.
 */
 type_complex returns [Type ast] locals [List<RecordField> recordFields = new ArrayList<>()]:
         '[' INT_CONSTANT ']' t1 = type { $ast = new ArrayType($t1.ast, LexerHelper.lexemeToInt($INT_CONSTANT.getText())); }
