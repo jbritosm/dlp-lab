@@ -18,6 +18,10 @@ public class Program extends AbstractASTNode {
         return definitions;
     }
 
+    public void setDefinitions(List<Definition> definitions) {
+        this.definitions = definitions;
+    }
+
     @Override
     public String toString() {
         return "Program{" +

@@ -9,13 +9,28 @@ grammar Pmm;
     import ast.functioninvocation.*;
 }
 
-program returns [Program ast] locals [List<Definition> definitions = new ArrayList<>(), FunctionDefinition main]:
+program returns [Program ast] /*[Program ast = new Program(null)]*/ locals [List<Definition> definitions = new ArrayList<>(), FunctionDefinition main]:
 
                          /* Sequence of variable and function definitions */
                          (variable_definition { $definitions.addAll($variable_definition.ast); }
                          | function_definition { $definitions.add($function_definition.ast); } )*
 
-                         /* main */
+                         /*
+                            Main
+
+                            In case the provided input does not comply with the pattern specified
+                            in the description for the language there will be an error and the
+                            AST wont be created.
+
+                            In order to "fix" this behaviour ast can be initialized as:
+
+                                - Program ast = new Program(null);
+
+                            After initializing, before the EOF we will use a setter to set the
+                            list of definitions required by Program.
+
+                                - $ast.setDefinitions($definitions);
+                         */
                          DEF = 'def' MAIN = 'main' '('
                                              function_parameter_definition
                                              ')'':'
@@ -30,7 +45,7 @@ program returns [Program ast] locals [List<Definition> definitions = new ArrayLi
                                              );
                                              }
 
-                         { $definitions.add($main); } { $ast = new Program($definitions); } EOF
+                         { $definitions.add($main); } { $ast = new Program($definitions); } /* { $ast.setDefinitions($definitions); } */ EOF
 ;
 
 // ####################### Parser #######################
@@ -215,8 +230,8 @@ parameter_definition returns[VariableDefinition ast]: ID ':' t1 = type_simple {
     Body of If, else and While statements NOT FUNCTIONS!!!!.
 */
 body returns [List<Statement> ast = new ArrayList<>()]:
-            (st1 = statement { $ast.add($st1.ast); }
-            | '{' (st2 = statement { $ast.add($st2.ast); } )* '}')
+            st1 = statement { $ast.add($st1.ast); }
+            | '{' (st2 = statement { $ast.add($st2.ast); } )* '}'
 ;
 
 /*
