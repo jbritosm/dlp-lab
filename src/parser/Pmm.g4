@@ -7,6 +7,8 @@ grammar Pmm;
     import ast.statement.*;
     import ast.type.*;
     import ast.functioninvocation.*;
+
+    import errorhandler.*;
 }
 
 program returns [Program ast] /*[Program ast = new Program(null)]*/ locals [List<Definition> definitions = new ArrayList<>(), FunctionDefinition main]:
@@ -306,7 +308,14 @@ variable_definition returns [List<VariableDefinition> ast = new ArrayList<>()] l
 */
 variable_definition returns [List<VariableDefinition> ast = new ArrayList<>()]:
         ID1 = ID { $ast.add(new VariableDefinition(null, $ID1.getText(), $ID1.getLine(), $ID1.getCharPositionInLine() + 1)); }
-        (',' ID2 = ID { $ast.add(new VariableDefinition(null, $ID2.getText(), $ID2.getLine(), $ID2.getCharPositionInLine() + 1)); } )*
+        (',' ID2 = ID
+        {
+            for (VariableDefinition varDef: $ast)
+                if(varDef.getName().equals($ID2.getText()))
+                    ErrorHandler.getInstance().addError(new ErrorType("Identificador repetido", $ID2.getLine(), $ID2.getCharPositionInLine() + 1));
+
+            $ast.add(new VariableDefinition(null, $ID2.getText(), $ID2.getLine(), $ID2.getCharPositionInLine() + 1));
+        } )*
         ':' t = type { for(VariableDefinition def: $ast) { def.setType($t.ast); } } ';'
 ;
 
@@ -345,7 +354,18 @@ type_simple returns [Type ast]: 'int' { $ast = IntType.getInstance(); }
 type_complex returns [Type ast] locals [List<RecordField> recordFields = new ArrayList<>()]:
         '[' INT_CONSTANT ']' t1 = type { $ast = new ArrayType($t1.ast, LexerHelper.lexemeToInt($INT_CONSTANT.getText())); }
         /*| 'struct' '{' (rf = record_field { $recordFields.add($rf.ast); })* '}' { $ast = new RecordType($recordFields); }*/
-        | 'struct' '{' (varDef = variable_definition { for(VariableDefinition def : $varDef.ast) { $recordFields.add(new RecordField(def.getName(), def.getType(), def.getLine(), def.getColumn())); }})* '}'
+        | 'struct' '{' (varDef = variable_definition
+        {
+            for(VariableDefinition def : $varDef.ast) {
+
+                for(RecordField rf: $recordFields)
+                    if(rf.getName().equals(def.getName()))
+                        ErrorHandler.getInstance().addError(new ErrorType("Identificador repetido", def.getLine(), def.getColumn()));
+
+                $recordFields.add(new RecordField(def.getName(), def.getType(), def.getLine(), def.getColumn()));
+            }
+
+        })* '}'
         { $ast = new RecordType($recordFields); }
 ;
 

@@ -7,15 +7,32 @@ grammar Pmm;
     import ast.statement.*;
     import ast.type.*;
     import ast.functioninvocation.*;
+
+    import errorhandler.*;
 }
 
-program returns [Program ast] locals [List<Definition> definitions = new ArrayList<>(), FunctionDefinition main]:
+program returns [Program ast] /*[Program ast = new Program(null)]*/ locals [List<Definition> definitions = new ArrayList<>(), FunctionDefinition main]:
 
                          /* Sequence of variable and function definitions */
                          (variable_definition { $definitions.addAll($variable_definition.ast); }
                          | function_definition { $definitions.add($function_definition.ast); } )*
 
-                         /* main */
+                         /*
+                            Main
+
+                            In case the provided input does not comply with the pattern specified
+                            in the description for the language there will be an error and the
+                            AST wont be created.
+
+                            In order to "fix" this behaviour ast can be initialized as:
+
+                                - Program ast = new Program(null);
+
+                            After initializing, before the EOF we will use a setter to set the
+                            list of definitions required by Program.
+
+                                - $ast.setDefinitions($definitions);
+                         */
                          DEF = 'def' MAIN = 'main' '('
                                              function_parameter_definition
                                              ')'':'
@@ -30,7 +47,7 @@ program returns [Program ast] locals [List<Definition> definitions = new ArrayLi
                                              );
                                              }
 
-                         { $definitions.add($main); } { $ast = new Program($definitions); } EOF
+                         { $definitions.add($main); } { $ast = new Program($definitions); } /* { $ast.setDefinitions($definitions); } */ EOF
 ;
 
 // ####################### Parser #######################
@@ -215,8 +232,8 @@ parameter_definition returns[VariableDefinition ast]: ID ':' t1 = type_simple {
     Body of If, else and While statements NOT FUNCTIONS!!!!.
 */
 body returns [List<Statement> ast = new ArrayList<>()]:
-            (st1 = statement { $ast.add($st1.ast); }
-            | '{' (st2 = statement { $ast.add($st2.ast); } )* '}')
+            st1 = statement { $ast.add($st1.ast); }
+            | '{' (st2 = statement { $ast.add($st2.ast); } )* '}'
 ;
 
 /*
@@ -261,20 +278,17 @@ In case of variable definitions we have the following possibilities:
         	character: char;
     };
 
+    a, b, c: struct {
+            a: int;
+        };
+
     Arrays:
     vector: [10][5]int;
-
-    We do not use a single type rule because it could detect:
-
-    a, b, c: struct {
-        a: int;
-    };
-
-    Which is not allowed in our language.
 */
 
 
-/* First approach its OK but dirtier than the second approach.
+/*
+    First approach its OK but dirtier than the second approach.
 
 variable_definition returns [List<VariableDefinition> ast = new ArrayList<>()] locals [List<Token> identifiers = new ArrayList<>()]:
         ID1 = ID { $identifiers.add($ID1); } (',' ID2 = ID { $identifiers.add($ID2); } )*
@@ -294,7 +308,14 @@ variable_definition returns [List<VariableDefinition> ast = new ArrayList<>()] l
 */
 variable_definition returns [List<VariableDefinition> ast = new ArrayList<>()]:
         ID1 = ID { $ast.add(new VariableDefinition(null, $ID1.getText(), $ID1.getLine(), $ID1.getCharPositionInLine() + 1)); }
-        (',' ID2 = ID { $ast.add(new VariableDefinition(null, $ID2.getText(), $ID2.getLine(), $ID2.getCharPositionInLine() + 1)); } )*
+        (',' ID2 = ID
+        {
+            for (VariableDefinition varDef: $ast)
+                if(varDef.getName().equals($ID2.getText()))
+                    ErrorHandler.getInstance().addError(new ErrorType("Identificador repetido", $ID2.getLine(), $ID2.getCharPositionInLine() + 1));
+
+            $ast.add(new VariableDefinition(null, $ID2.getText(), $ID2.getLine(), $ID2.getCharPositionInLine() + 1));
+        } )*
         ':' t = type { for(VariableDefinition def: $ast) { def.setType($t.ast); } } ';'
 ;
 
@@ -325,11 +346,26 @@ type_simple returns [Type ast]: 'int' { $ast = IntType.getInstance(); }
 
     After all variable definitions are processed we create a new RecordType
     object initialized with the list of record fields previously populated.
+
+    As it can be seen in the following rule, inside structs we do not detect record
+    fields but variable definitions. The only difference is the object we create which
+    is a RecordField object.
 */
 type_complex returns [Type ast] locals [List<RecordField> recordFields = new ArrayList<>()]:
         '[' INT_CONSTANT ']' t1 = type { $ast = new ArrayType($t1.ast, LexerHelper.lexemeToInt($INT_CONSTANT.getText())); }
         /*| 'struct' '{' (rf = record_field { $recordFields.add($rf.ast); })* '}' { $ast = new RecordType($recordFields); }*/
-        | 'struct' '{' (varDef = variable_definition { for(VariableDefinition def : $varDef.ast) { $recordFields.add(new RecordField(def.getName(), def.getType(), def.getLine(), def.getColumn())); }})* '}'
+        | 'struct' '{' (varDef = variable_definition
+        {
+            for(VariableDefinition def : $varDef.ast) {
+
+                for(RecordField rf: $recordFields)
+                    if(rf.getName().equals(def.getName()))
+                        ErrorHandler.getInstance().addError(new ErrorType("Identificador repetido", def.getLine(), def.getColumn()));
+
+                $recordFields.add(new RecordField(def.getName(), def.getType(), def.getLine(), def.getColumn()));
+            }
+
+        })* '}'
         { $ast = new RecordType($recordFields); }
 ;
 
