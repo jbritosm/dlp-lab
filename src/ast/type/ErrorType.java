@@ -1,5 +1,7 @@
 package ast.type;
 
+import errorhandler.ErrorHandler;
+
 public class ErrorType extends AbstractType {
 
     private String msg;
@@ -8,6 +10,8 @@ public class ErrorType extends AbstractType {
         super(line, column);
 
         this.msg = msg;
+
+        ErrorHandler.getInstance().addError(this);
     }
 
     @Override
