@@ -2,8 +2,9 @@ package ast.definition;
 
 import ast.astnode.AbstractASTNode;
 import ast.type.Type;
+import visitor.Visitor;
 
-public class AbstractDefinition extends AbstractASTNode implements Definition {
+public abstract class AbstractDefinition extends AbstractASTNode implements Definition {
 
     private Type type;
     private String name;

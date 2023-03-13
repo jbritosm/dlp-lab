@@ -1,6 +1,7 @@
 package ast.statement;
 
 import ast.expression.Expression;
+import visitor.Visitor;
 
 import java.util.List;
 
@@ -37,5 +38,10 @@ public class IfElseStatement extends AbstractStatement {
                 ", ifBody=" + ifBody +
                 ", elseBody=" + elseBody +
                 '}';
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> v, TP parameter) {
+        return null;
     }
 }

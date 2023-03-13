@@ -1,5 +1,7 @@
 package ast.expression;
 
+import visitor.Visitor;
+
 public class VariableExpression extends AbstractExpression {
 
     private String name;
@@ -19,5 +21,10 @@ public class VariableExpression extends AbstractExpression {
         return "VariableExpression{" +
                 "name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> v, TP parameter) {
+        return null;
     }
 }

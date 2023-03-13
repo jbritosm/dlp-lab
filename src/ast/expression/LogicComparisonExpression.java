@@ -1,5 +1,7 @@
 package ast.expression;
 
+import visitor.Visitor;
+
 public class LogicComparisonExpression extends AbstractExpression {
 
     private String operator;
@@ -33,5 +35,10 @@ public class LogicComparisonExpression extends AbstractExpression {
                 ", left=" + left +
                 ", right=" + right +
                 '}';
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> v, TP parameter) {
+        return null;
     }
 }

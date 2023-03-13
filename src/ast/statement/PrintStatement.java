@@ -1,6 +1,7 @@
 package ast.statement;
 
 import ast.expression.Expression;
+import visitor.Visitor;
 
 import java.util.List;
 
@@ -23,5 +24,10 @@ public class PrintStatement extends AbstractStatement {
         return "PrintStatement{" +
                 "printExpressions=" + printExpressions +
                 '}';
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> v, TP parameter) {
+        return null;
     }
 }

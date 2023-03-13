@@ -312,7 +312,7 @@ variable_definition returns [List<VariableDefinition> ast = new ArrayList<>()]:
         {
             for (VariableDefinition varDef: $ast)
                 if(varDef.getName().equals($ID2.getText()))
-                    new ErrorType("Repeated identifier", $ID2.getLine(), $ID2.getCharPositionInLine() + 1);
+                    new ErrorType("Repeated identifier in variable definition" + " " + varDef.getName(), $ID2.getLine(), $ID2.getCharPositionInLine() + 1);
 
             $ast.add(new VariableDefinition(null, $ID2.getText(), $ID2.getLine(), $ID2.getCharPositionInLine() + 1));
         } )*
@@ -360,7 +360,7 @@ type_complex returns [Type ast] locals [List<RecordField> recordFields = new Arr
 
                 for(RecordField rf: $recordFields)
                     if(rf.getName().equals(def.getName()))
-                        new ErrorType("Repeated identifier", def.getLine(), def.getColumn());
+                        new ErrorType("Repeated identifier in struct" + " " + rf.getName(), def.getLine(), def.getColumn());
 
                 $recordFields.add(new RecordField(def.getName(), def.getType(), def.getLine(), def.getColumn()));
             }

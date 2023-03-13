@@ -1,10 +1,14 @@
 package ast.expression;
 
+import visitor.Visitor;
+
 public class ArithmeticComparisonExpression extends AbstractExpression {
 
     private String operator;
     private Expression left;
     private Expression right;
+
+    private boolean lValue;
 
     public ArithmeticComparisonExpression(String operator, Expression left, Expression right, int line, int column) {
         super(line, column);
@@ -34,5 +38,10 @@ public class ArithmeticComparisonExpression extends AbstractExpression {
                 ", left=" + left +
                 ", right=" + right +
                 '}';
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> v, TP parameter) {
+        return null;
     }
 }

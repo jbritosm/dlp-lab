@@ -1,5 +1,7 @@
 package ast.type;
 
+import visitor.Visitor;
+
 public class RealType extends AbstractType {
 
     private static Type instance;
@@ -17,5 +19,10 @@ public class RealType extends AbstractType {
     @Override
     public String toString() {
         return "RealType{}";
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> v, TP parameter) {
+        return null;
     }
 }

@@ -4,6 +4,8 @@ public abstract class AbstractASTNode implements ASTNode {
     private int line;
     private int column;
 
+    private boolean lValue;
+
     public AbstractASTNode(int line, int column) {
         this.line = line;
         this.column = column;

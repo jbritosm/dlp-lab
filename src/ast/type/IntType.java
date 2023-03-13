@@ -1,6 +1,8 @@
 package ast.type;
 
 
+import visitor.Visitor;
+
 public class IntType extends AbstractType {
 
     private static Type instance;
@@ -18,5 +20,10 @@ public class IntType extends AbstractType {
     @Override
     public String toString() {
         return "IntType{}";
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> v, TP parameter) {
+        return null;
     }
 }

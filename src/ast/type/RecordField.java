@@ -1,6 +1,7 @@
 package ast.type;
 
 import ast.astnode.AbstractASTNode;
+import visitor.Visitor;
 
 public class RecordField extends AbstractASTNode {
 
@@ -29,6 +30,11 @@ public class RecordField extends AbstractASTNode {
 
     public int getColumn() {
         return this.column;
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> v, TP parameter) {
+        return null;
     }
 
     @Override

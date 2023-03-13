@@ -1,5 +1,7 @@
 package ast.type;
 
+import visitor.Visitor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,5 +30,10 @@ public class ArrayType extends AbstractType {
                 "size=" + size +
                 ", type=" + type +
                 '}';
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> v, TP parameter) {
+        return null;
     }
 }

@@ -1,5 +1,7 @@
 package ast.expression;
 
+import visitor.Visitor;
+
 public class NotExpression extends AbstractExpression {
 
     private Expression expressionToNegate;
@@ -19,5 +21,10 @@ public class NotExpression extends AbstractExpression {
         return "NotExpression{" +
                 "expressionToNegate=" + expressionToNegate +
                 '}';
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> v, TP parameter) {
+        return null;
     }
 }

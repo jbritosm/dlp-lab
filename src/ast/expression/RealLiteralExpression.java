@@ -1,6 +1,7 @@
 package ast.expression;
 
 import ast.expression.AbstractExpression;
+import visitor.Visitor;
 
 public class RealLiteralExpression extends AbstractExpression {
 
@@ -20,5 +21,10 @@ public class RealLiteralExpression extends AbstractExpression {
         return "RealLiteralExpression{" +
                 "value=" + value +
                 '}';
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> v, TP parameter) {
+        return null;
     }
 }

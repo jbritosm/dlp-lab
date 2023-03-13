@@ -1,6 +1,7 @@
 package ast.astnode;
 
 import ast.definition.Definition;
+import visitor.Visitor;
 
 import java.util.List;
 
@@ -27,5 +28,10 @@ public class Program extends AbstractASTNode {
         return "Program{" +
                 "definitions=" + definitions +
                 '}';
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> v, TP parameter) {
+        return null;
     }
 }
