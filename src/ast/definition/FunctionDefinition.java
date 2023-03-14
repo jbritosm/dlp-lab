@@ -29,6 +29,8 @@ public class FunctionDefinition extends AbstractDefinition {
 
     @Override
     public <TP, TR> TR accept(Visitor<TP, TR> v, TP parameter) {
+        v.visit(this, parameter);
+
         return null;
     }
 }

@@ -1,24 +1,15 @@
+def f(e:int):double {
+  return (double)e;
+}
 
-# One line comment!
-
-""" Integer
-   constants """
-    0 123	
-    0 12   
-
-""" Real
-   constants """
-    12.3  2.  .34
-    34.12E-3  3e3
-
-""" Identifiers """
-
-    var1  _var_1  VAR_1_AB_2
-
-""" Char
-   constants """
-    'a'  'b'  '.'  '-'  '~'
-    '\n'  '\t'
-    '\126'
-
-# Comment at the end of the file
+# Main program
+def main(): {
+  i,a,j:int;
+  v:[10]double;
+  
+  a = 0;
+  i = 0;
+  j = -i*a-2;  
+  v[(int)(v[j])] = (double)a;
+  print 'f', '(', 'i', ')', '=' ,f(i);
+}

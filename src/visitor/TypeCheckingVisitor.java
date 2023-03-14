@@ -156,12 +156,22 @@ public class TypeCheckingVisitor implements Visitor<Void, Void> {
     public Void visit(PrintStatement printStatement, Void parameter) {
         printStatement.getPrintExpressions().forEach(expression -> expression.accept(this, null));
 
+        printStatement.getPrintExpressions().forEach(expression -> {
+            if(!expression.getLValue())
+                new ErrorType("Required lValue in left part of assignment statement", expression.getLine(), expression.getColumn());
+        });
+
         return null;
     }
 
     @Override
     public Void visit(ReadStatement readStatement, Void parameter) {
         readStatement.getReadExpressions().forEach(expression -> expression.accept(this, null));
+
+        readStatement.getReadExpressions().forEach(expression -> {
+            if(!expression.getLValue())
+                new ErrorType("Required lValue in left part of assignment statement", expression.getLine(), expression.getColumn());
+        });
 
         return null;
     }
@@ -200,6 +210,7 @@ public class TypeCheckingVisitor implements Visitor<Void, Void> {
 
     @Override
     public Void visit(FunctionType functionType, Void parameter) {
+        functionType.getArguments().forEach(variableDefinition -> variableDefinition.accept(this, null));
         return null;
     }
 
@@ -220,6 +231,8 @@ public class TypeCheckingVisitor implements Visitor<Void, Void> {
 
     @Override
     public Void visit(RecordType recordType, Void parameter) {
+        recordType.getFields().forEach(recordField -> recordField.accept(this, null));
+
         return null;
     }
 
