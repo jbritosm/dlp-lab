@@ -25,7 +25,6 @@ public class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
 
     @Override
     public TR visit(VariableDefinition variableDefinition, TP parameter) {
-        variableDefinition.accept(this, null);
         return null;
     }
 
@@ -127,21 +126,26 @@ public class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
 
     @Override
     public TR visit(PrintStatement printStatement, TP parameter) {
+        printStatement.getPrintExpressions().forEach(expression -> expression.accept(this, null));
         return null;
     }
 
     @Override
     public TR visit(ReadStatement readStatement, TP parameter) {
+        readStatement.getReadExpressions().forEach(expression -> expression.accept(this, null));
         return null;
     }
 
     @Override
     public TR visit(ReturnStatement returnStatement, TP parameter) {
+        returnStatement.accept(this, null);
         return null;
     }
 
     @Override
     public TR visit(WhileStatement whileStatement, TP parameter) {
+        whileStatement.getCondition().accept(this, null);
+        whileStatement.getBody().forEach(statement -> statement.accept(this, null));
         return null;
     }
 
@@ -162,6 +166,8 @@ public class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
 
     @Override
     public TR visit(FunctionType functionType, TP parameter) {
+        functionType.getArguments().forEach(variableDefinition -> variableDefinition.accept(this, null));
+        functionType.getReturnType().accept(this, null);
         return null;
     }
 
@@ -177,11 +183,13 @@ public class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
 
     @Override
     public TR visit(RecordField recordField, TP parameter) {
+        recordField.getFieldType().accept(this, null);
         return null;
     }
 
     @Override
     public TR visit(RecordType recordType, TP parameter) {
+        recordType.getFields().forEach(recordField -> recordField.accept(this, null));
         return null;
     }
 
