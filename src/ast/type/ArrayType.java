@@ -1,9 +1,6 @@
 package ast.type;
 
-import visitor.Visitor;
-
-import java.util.ArrayList;
-import java.util.List;
+import semantic.Visitor;
 
 public class ArrayType extends AbstractType {
 

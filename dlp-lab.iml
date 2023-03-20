@@ -9,5 +9,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="lib" level="project" />
+    <orderEntry type="library" name="introspector-1.2 (3)" level="project" />
+    <orderEntry type="library" name="antlr-4.11.1-complete (3)" level="project" />
   </component>
 </module>

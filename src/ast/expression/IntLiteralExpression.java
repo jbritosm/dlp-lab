@@ -1,7 +1,6 @@
 package ast.expression;
 
-import ast.expression.AbstractExpression;
-import visitor.Visitor;
+import semantic.Visitor;
 
 public class IntLiteralExpression extends AbstractExpression {
 

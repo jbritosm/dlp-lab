@@ -4,7 +4,7 @@ import ast.expression.AbstractExpression;
 import ast.expression.Expression;
 import ast.expression.VariableExpression;
 import ast.statement.Statement;
-import visitor.Visitor;
+import semantic.Visitor;
 
 import java.util.List;
 

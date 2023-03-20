@@ -1,4 +1,4 @@
-package visitor;
+package semantic;
 
 import ast.astnode.Program;
 import ast.definition.FunctionDefinition;
@@ -8,17 +8,13 @@ import ast.functioninvocation.FunctionInvocation;
 import ast.statement.*;
 import ast.type.*;
 
-import java.io.PrintStream;
-
 public interface Visitor<TP, TR> {
 
     // Program
     TR visit(Program program, TP parameter);
-
     // Definition
     TR visit(FunctionDefinition functionDefinition, TP parameter);
     TR visit(VariableDefinition variableDefinition, TP parameter);
-
     // Expressions
     TR visit(ArithmeticComparisonExpression arithmeticComparisonExpression, TP parameter);
     TR visit(ArithmeticExpression arithmeticExpression, TP parameter);

@@ -1,7 +1,6 @@
 package ast.statement;
 
 import ast.astnode.AbstractASTNode;
-import visitor.Visitor;
 
 
 public abstract class AbstractStatement extends AbstractASTNode implements Statement {

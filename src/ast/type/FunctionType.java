@@ -2,9 +2,8 @@ package ast.type;
 
 
 import ast.definition.VariableDefinition;
-import visitor.Visitor;
+import semantic.Visitor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FunctionType extends AbstractType {

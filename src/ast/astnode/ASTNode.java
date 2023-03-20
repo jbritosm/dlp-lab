@@ -1,6 +1,6 @@
 package ast.astnode;
 
-import visitor.Visitor;
+import semantic.Visitor;
 
 public interface ASTNode {
     int getLine();

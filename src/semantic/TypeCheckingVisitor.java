@@ -1,4 +1,4 @@
-package visitor;
+package semantic;
 
 import ast.astnode.Program;
 import ast.definition.FunctionDefinition;
@@ -8,9 +8,7 @@ import ast.functioninvocation.FunctionInvocation;
 import ast.statement.*;
 import ast.type.*;
 
-import java.lang.reflect.Array;
-
-public class TypeCheckingVisitor implements Visitor<Void, Void> {
+public class TypeCheckingVisitor extends AbstractVisitor<Void, Void> {
     @Override
         public Void visit(Program program, Void parameter) {
         program.getDefinitions().forEach(definition -> definition.accept(this, null));

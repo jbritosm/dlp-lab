@@ -1,7 +1,7 @@
 package ast.astnode;
 
 import ast.definition.Definition;
-import visitor.Visitor;
+import semantic.Visitor;
 
 import java.util.List;
 

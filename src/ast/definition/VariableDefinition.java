@@ -2,7 +2,7 @@ package ast.definition;
 
 import ast.statement.Statement;
 import ast.type.Type;
-import visitor.Visitor;
+import semantic.Visitor;
 
 public class VariableDefinition extends AbstractDefinition implements Statement {
 
