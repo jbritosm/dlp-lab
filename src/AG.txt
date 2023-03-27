@@ -34,14 +34,14 @@
 (2) IfElseStatement: statement1 -> expression statement2* statement3*
 (3) WhileStatement: statement1 -> expression statement2*
 (4) PrintStatement: statement -> expression*
-(5) ReturnStatement
+(5) ReturnStatement: statement -> expression # Pasar atributos por el visitor
 
 // Statement attribute grammar
 (1) expression1.type = expression2.type.canPromote(expression1.type)
 (2) expression.type = expression.type.asLogical() # Duda
 (3) expression.type = expression.type.asLogical() # Duda
 (4) expression.type = expression.type.isBuiltIn()
-(5)
+(5) expression.type = expression.type.mustBeCompatible(statement.type(????))
 
 // Definition abstract grammar
 (1) FunctionDefinition: definition ->
