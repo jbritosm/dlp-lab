@@ -15,8 +15,7 @@ public class IdentificationVisitor extends AbstractVisitor<Void, Void> {
     public Void visit(FunctionDefinition functionDefinition, Void parameter) {
         st.insert(functionDefinition);
         st.set();
-        functionDefinition.getStatements().forEach(statement -> statement.accept(this, null));
-        functionDefinition.getType().accept(this, null);
+        super.visit(functionDefinition, parameter);
         st.reset();
 
         return null;

@@ -1,0 +1,49 @@
+// Expression abstract grammar
+
+(1) ArithmeticExpression: expression1 -> expression2 (+|-|*|/) expression3
+(2) ArithmeticComparisonExpression: expression1 -> expression2 (<|>|==|!=|<=|>=) expression3
+(3) ArrayIndexExpression: expression1 -> expression2 expression3
+(4) CastExpression: expression1 -> type expression2
+(5) CharLiteralExpression: expression1 -> CharType
+(6) FieldAccessExpression: expression1 -> expression2 ID
+(7) IntLiteralExpression: expression1 -> IntType
+(8) LogicComparisonExpression: expression1 -> expression2 (==|&&| || |!=) expression3
+(9) NotExpression: expression1 -> expression2
+(10) RealLiteralExpression: expression1 -> RealType
+(11) UnaryMinusExpression: expression1 -> expression2
+(12) VariableExpression: expression1 -> ID definition
+(13) FunctionInvocation: expression1 -> expression2 expression3*
+
+// Expression attribute grammar
+(1) expression1.type = expression2.type.asArithmetic(expression3.type)
+(2) expression1.type = expression2.type.asComparison(expression3.type)
+(3) expression1.type = expression2.squareBrackets(expression3.type)
+(4) expression1.type = type.castTo(expression2.type)
+(5) expression1.type = new CharType()
+(6) expression1.type = expression2.dot() # Duda
+(7) expression1.type = new IntType()
+(8) expression1.type = expression2.type.asLogical(expression3.type)
+(9) expression1.type = expression2.type.asNegation()
+(10) expression1.type = new RealType()
+(11) expression1.type = expression2.asUnaryMinus()
+(12) expression1.type = definition.type
+(13) expression1.type = expression2.type.asBuiltIn(expression3*)
+
+// Statements abstract grammar
+(1) AssignmentStatement: statement -> expression1 expression2
+(2) IfElseStatement: statement1 -> expression statement2* statement3*
+(3) WhileStatement: statement1 -> expression statement2*
+(4) PrintStatement: statement -> expression*
+(5) ReturnStatement
+
+// Statement attribute grammar
+(1) expression1.type = expression2.type.canPromote(expression1.type)
+(2) expression.type = expression.type.asLogical() # Duda
+(3) expression.type = expression.type.asLogical() # Duda
+(4) expression.type = expression.type.isBuiltIn()
+(5)
+
+// Definition abstract grammar
+(1) FunctionDefinition: definition ->
+
+// Definition attribute grammar
