@@ -1,5 +1,4 @@
 // Expression abstract grammar
-
 (1) ArithmeticExpression: expression1 -> expression2 (+|-|*|/) expression3
 (2) ArithmeticComparisonExpression: expression1 -> expression2 (<|>|==|!=|<=|>=) expression3
 (3) ArrayIndexExpression: expression1 -> expression2 expression3
@@ -20,14 +19,14 @@
 (3) expression1.type = expression2.squareBrackets(expression3.type)
 (4) expression1.type = type.castTo(expression2.type)
 (5) expression1.type = new CharType()
-(6) expression1.type = expression2.dot() # Duda
+(6) expression1.type = expression2.dot()
 (7) expression1.type = new IntType()
 (8) expression1.type = expression2.type.asLogical(expression3.type)
 (9) expression1.type = expression2.type.asNegation()
 (10) expression1.type = new RealType()
 (11) expression1.type = expression2.asUnaryMinus()
 (12) expression1.type = definition.type
-(13) expression1.type = expression2.type.asBuiltIn(expression3*)
+(13) expression1.type = expression2.type.asBuiltIn(expression3*) # Hay que hacer un for each, no pasar la lista de expressiones
 
 // Statements abstract grammar
 (1) AssignmentStatement: statement -> expression1 expression2
@@ -40,10 +39,5 @@
 (1) expression1.type = expression2.type.canPromote(expression1.type)
 (2) expression.type = expression.type.asLogical() # Duda
 (3) expression.type = expression.type.asLogical() # Duda
-(4) expression.type = expression.type.isBuiltIn()
+(4) expression.type = expression.type.asBuiltIn()
 (5) expression.type = expression.type.mustBeCompatible(statement.type(????))
-
-// Definition abstract grammar
-(1) FunctionDefinition: definition ->
-
-// Definition attribute grammar
