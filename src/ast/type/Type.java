@@ -12,7 +12,6 @@ public interface Type extends ASTNode {
     Type asLogical(Type type, ASTNode node);
     Type asNegation(ASTNode node);
     Type asUnaryMinus(ASTNode node);
-    Type asBuiltIn(Type type, ASTNode node);
     Type canPromote(Type type, ASTNode node);
     Type asLogical(ASTNode node);
     Type asBuiltIn(ASTNode node);
