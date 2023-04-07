@@ -1,5 +1,6 @@
 package ast.type;
 
+import ast.astnode.ASTNode;
 import errorhandler.ErrorHandler;
 import semantic.Visitor;
 
@@ -25,5 +26,65 @@ public class ErrorType extends AbstractType {
         v.visit(this, parameter);
 
         return null;
+    }
+
+    @Override
+    public Type asArithmetic(Type type, ASTNode node) {
+        return this;
+    }
+
+    @Override
+    public Type asComparison(Type type, ASTNode node) {
+        return this;
+    }
+
+    @Override
+    public Type squareBrackets(Type type, ASTNode node) {
+        return this;
+    }
+
+    @Override
+    public Type castTo(Type type, ASTNode node) {
+        return this;
+    }
+
+    @Override
+    public Type dot(String id, ASTNode node) {
+        return this;
+    }
+
+    @Override
+    public Type asLogical(Type type, ASTNode node) {
+        return this;
+    }
+
+    @Override
+    public Type asNegation(ASTNode node) {
+        return this;
+    }
+
+    @Override
+    public Type asUnaryMinus(ASTNode node) {
+        return this;
+    }
+
+    @Override
+    public Type canPromote(Type type, ASTNode node) {
+        return this;
+    }
+
+    @Override // Check int type
+    public Type asLogical(ASTNode node) {
+        return this;
+    }
+
+    @Override
+    public Type asBuiltIn(ASTNode node) {
+        return this;
+    }
+
+    @Override
+    public Type mustBeCompatible(Type type, ASTNode node) {
+        return this;
     }
 }

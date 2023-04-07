@@ -1,5 +1,6 @@
 package ast.type;
 
+import ast.astnode.ASTNode;
 import semantic.Visitor;
 
 public class ArrayType extends AbstractType {
@@ -35,4 +36,14 @@ public class ArrayType extends AbstractType {
 
         return null;
     }
+
+    @Override
+    public Type squareBrackets(Type t, ASTNode node) {
+        if(t instanceof IntType)
+            return t;
+        if(t instanceof ErrorType)
+            return t;
+        return new ErrorType(String.format("The index of an array access must be integer, not %s", t), node.getLine(), node.getColumn());
+    }
+
 }

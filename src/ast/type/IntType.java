@@ -1,6 +1,7 @@
 package ast.type;
 
 
+import ast.astnode.ASTNode;
 import semantic.Visitor;
 
 public class IntType extends AbstractType {
@@ -28,4 +29,31 @@ public class IntType extends AbstractType {
 
         return null;
     }
+
+    @Override
+    public Type asArithmetic(Type t, ASTNode node) {
+        if(t instanceof IntType)
+            return t;
+        return new ErrorType(String.format("An integer cannot operate with a %s", t), node.getLine(), node.getColumn());
+    }
+
+    @Override
+    public Type asComparison(Type t, ASTNode node) {
+        if(t instanceof IntType)
+            return t;
+        return new ErrorType(String.format("An integer cannot be compared with a %s", t), node.getLine(), node.getColumn());
+    }
+
+    @Override
+    public Type asUnaryMinus(ASTNode node) {
+        return this;
+    }
+
+    @Override
+    public Type asBuiltIn(ASTNode node) {
+        return this;
+    }
+
+
+
 }

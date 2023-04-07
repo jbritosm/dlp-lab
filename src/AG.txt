@@ -6,7 +6,7 @@
 (5) CharLiteralExpression: expression1 -> CharType
 (6) FieldAccessExpression: expression1 -> expression2 ID
 (7) IntLiteralExpression: expression1 -> IntType
-(8) LogicComparisonExpression: expression1 -> expression2 (==|&&| || |!=) expression3
+(8) LogicComparisonExpression: expression1 -> expression2 (&& / ||) expression3
 (9) NotExpression: expression1 -> expression2
 (10) RealLiteralExpression: expression1 -> RealType
 (11) UnaryMinusExpression: expression1 -> expression2
@@ -27,6 +27,7 @@
 (11) expression1.type = expression2.asUnaryMinus()
 (12) expression1.type = definition.type
 (13) expression1.type = expression2.type.asBuiltIn(expression3*) # Hay que hacer un for each, no pasar la lista de expressiones
+(13) expression
 
 // Statements abstract grammar
 (1) AssignmentStatement: statement -> expression1 expression2

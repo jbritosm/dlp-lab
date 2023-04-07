@@ -31,7 +31,7 @@ public abstract class AbstractType extends AbstractASTNode implements Type {
     }
 
     @Override
-    public Type dot(ASTNode node) {
+    public Type dot(String id, ASTNode node) {
         return new ErrorType(String.format("Access operation not supported for %s type.", this), node.getLine(), node.getColumn());
     }
 
@@ -48,11 +48,6 @@ public abstract class AbstractType extends AbstractASTNode implements Type {
     @Override
     public Type asUnaryMinus(ASTNode node) {
         return new ErrorType(String.format("UnaryMinus operation not supported for %s type.", this), node.getLine(), node.getColumn());
-    }
-
-    @Override
-    public Type asBuiltIn(Type type, ASTNode node) {
-        return new ErrorType(String.format("%s type is not a Built-in type.", this), node.getLine(), node.getColumn());
     }
 
     @Override

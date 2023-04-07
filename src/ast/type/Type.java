@@ -8,7 +8,7 @@ public interface Type extends ASTNode {
     Type asComparison(Type type, ASTNode node);
     Type squareBrackets(Type type, ASTNode node);
     Type castTo(Type type, ASTNode node);
-    Type dot(ASTNode node);
+    Type dot(String id, ASTNode node);
     Type asLogical(Type type, ASTNode node);
     Type asNegation(ASTNode node);
     Type asUnaryMinus(ASTNode node);
