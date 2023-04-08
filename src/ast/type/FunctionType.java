@@ -28,10 +28,12 @@ public class FunctionType extends AbstractType {
 
     @Override
     public String toString() {
-        return "FunctionType{" +
-                "arguments=" + arguments +
-                ", returnType=" + returnType +
-                '}';
+        return "FunctionType";
+    }
+
+    @Override
+    public String getTypeExpression() {
+        return "FunctionType";
     }
 
     @Override

@@ -34,11 +34,6 @@ public class ErrorType extends AbstractType {
     }
 
     @Override
-    public Type asComparison(Type type, ASTNode node) {
-        return this;
-    }
-
-    @Override
     public Type squareBrackets(Type type, ASTNode node) {
         return this;
     }
@@ -69,16 +64,6 @@ public class ErrorType extends AbstractType {
     }
 
     @Override
-    public Type canPromote(Type type, ASTNode node) {
-        return this;
-    }
-
-    @Override // Check int type
-    public Type asLogical(ASTNode node) {
-        return this;
-    }
-
-    @Override
     public Type asBuiltIn(ASTNode node) {
         return this;
     }
@@ -86,5 +71,13 @@ public class ErrorType extends AbstractType {
     @Override
     public Type mustBeCompatible(Type type, ASTNode node) {
         return this;
+    }
+
+    @Override
+    public Type canPromote(Type t, ASTNode node) { return this; }
+
+    @Override
+    public String getTypeExpression() {
+        return "ErrorType";
     }
 }

@@ -24,10 +24,7 @@ public class ArrayType extends AbstractType {
 
     @Override
     public String toString() {
-        return "ArrayType{" +
-                "size=" + size +
-                ", type=" + type +
-                '}';
+        return "ArrayType";
     }
 
     @Override
@@ -40,10 +37,16 @@ public class ArrayType extends AbstractType {
     @Override
     public Type squareBrackets(Type t, ASTNode node) {
         if(t instanceof IntType)
-            return t;
+            return getType();
         if(t instanceof ErrorType)
             return t;
         return new ErrorType(String.format("The index of an array access must be integer, not %s", t), node.getLine(), node.getColumn());
     }
+
+    @Override
+    public String getTypeExpression() {
+        return "ArrayType";
+    }
+
 
 }

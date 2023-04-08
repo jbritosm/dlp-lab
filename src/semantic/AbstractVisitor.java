@@ -10,7 +10,6 @@ import ast.type.*;
 
 public class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
 
-
     @Override
     public TR visit(Program program, TP parameter) {
         program.getDefinitions().forEach(definition -> definition.accept(this, null));
@@ -26,6 +25,7 @@ public class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
 
     @Override
     public TR visit(VariableDefinition variableDefinition, TP parameter) {
+        variableDefinition.getType().accept(this, null);
         return null;
     }
 
@@ -139,7 +139,7 @@ public class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
 
     @Override
     public TR visit(ReturnStatement returnStatement, TP parameter) {
-        returnStatement.accept(this, null);
+        returnStatement.getReturnExpression().accept(this, null);
         return null;
     }
 

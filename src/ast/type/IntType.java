@@ -20,7 +20,7 @@ public class IntType extends AbstractType {
 
     @Override
     public String toString() {
-        return "IntType{}";
+        return "IntType";
     }
 
     @Override
@@ -38,10 +38,20 @@ public class IntType extends AbstractType {
     }
 
     @Override
-    public Type asComparison(Type t, ASTNode node) {
+    public Type asLogical(Type t, ASTNode node) {
         if(t instanceof IntType)
             return t;
-        return new ErrorType(String.format("An integer cannot be compared with a %s", t), node.getLine(), node.getColumn());
+        return new ErrorType(String.format("Integer type cannot be compared with %s type.", t), node.getLine(), node.getColumn());
+    }
+
+    @Override
+    public Type asLogical(ASTNode node) {
+        return this;
+    }
+
+    @Override
+    public Type asNegation(ASTNode node) {
+        return this;
     }
 
     @Override
@@ -54,6 +64,38 @@ public class IntType extends AbstractType {
         return this;
     }
 
+    @Override
+    public Type castTo(Type t, ASTNode node) {
+        if(t instanceof IntType)
+            return t;
+        if(t instanceof RealType)
+            return t;
+        if(t instanceof CharType)
+            return t;
+        return new ErrorType(String.format("Integer cannot be casted to %s type.", t), node.getLine(), node.getColumn());
+    }
 
+    @Override
+    public Type mustBeCompatible(Type t, ASTNode node) {
+        Type returnType;
+        if(t instanceof FunctionType) {
+            returnType = ((FunctionType) t).getReturnType();
+            if (returnType instanceof IntType)
+                return returnType;
+            return new ErrorType(String.format("Return type: %s of the function not compatible with IntegerType", returnType.getTypeExpression()), node.getLine(), node.getColumn());
+        }
+        return new ErrorType(String.format("Return type: %s of the function not compatible with IntegerType", t.getTypeExpression()), node.getLine(), node.getColumn());
+    }
 
+    @Override
+    public Type canPromote(Type t, ASTNode node) {
+        if(t instanceof IntType)
+            return t;
+        return new ErrorType(String.format("%s type cannot be promoted to IntegerType.", t), node.getLine(), node.getColumn());
+    }
+
+    @Override
+    public String getTypeExpression() {
+        return "IntType";
+    }
 }

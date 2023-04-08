@@ -18,7 +18,12 @@ public class VoidType extends AbstractType {
 
     @Override
     public String toString() {
-        return "VoidType{}";
+        return "VoidType";
+    }
+
+    @Override
+    public String getTypeExpression() {
+        return "VoidType";
     }
 
     @Override

@@ -22,9 +22,7 @@ public class RecordType extends AbstractType {
 
     @Override
     public String toString() {
-        return "RecordType{" +
-                "fields=" + fields +
-                '}';
+        return "RecordType";
     }
 
     @Override
@@ -40,6 +38,11 @@ public class RecordType extends AbstractType {
             if(field.getName().equals(id))
                 return field.getFieldType();
         }
-        return new ErrorType(String.format("No field found with id %s.", id), node.getLine(), node.getColumn());
+        return new ErrorType(String.format("No field found with id: %s.", id), node.getLine(), node.getColumn());
+    }
+
+    @Override
+    public String getTypeExpression() {
+        return "RecordType";
     }
 }

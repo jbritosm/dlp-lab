@@ -19,7 +19,7 @@ public class CharType extends AbstractType {
 
     @Override
     public String toString() {
-        return "CharType{}";
+        return "CharType";
     }
 
     @Override
@@ -37,13 +37,6 @@ public class CharType extends AbstractType {
     }
 
     @Override
-    public Type asComparison(Type t, ASTNode node) {
-        if(t instanceof IntType)
-            return t;
-        return new ErrorType(String.format("An integer cannot be compared with a %s", t), node.getLine(), node.getColumn());
-    }
-
-    @Override
     public Type asUnaryMinus(ASTNode node) {
         return this;
     }
@@ -51,5 +44,38 @@ public class CharType extends AbstractType {
     @Override
     public Type asBuiltIn(ASTNode node) {
         return this;
+    }
+
+    @Override
+    public Type castTo(Type t, ASTNode node) {
+        if(t instanceof CharType)
+            return t;
+        if(t instanceof IntType)
+            return t;
+        return new ErrorType(String.format("Char type cannot be casted to %s type.", t), node.getLine(), node.getColumn());
+    }
+
+    @Override
+    public Type mustBeCompatible(Type t, ASTNode node) {
+        Type returnType;
+        if(t instanceof FunctionType) {
+            returnType = ((FunctionType) t).getReturnType();
+            if (returnType instanceof CharType)
+                return returnType;
+            return new ErrorType(String.format("Return type: %s of the function not compatible with CharType", returnType.getTypeExpression()), node.getLine(), node.getColumn());
+        }
+        return new ErrorType(String.format("Return type: %s of the function not compatible with CharType", t.getTypeExpression()), node.getLine(), node.getColumn());
+    }
+
+    @Override
+    public Type canPromote(Type t, ASTNode node) {
+        if(t instanceof CharType)
+            return t;
+        return new ErrorType(String.format("%s type cannot be promoted to CharType.", t), node.getLine(), node.getColumn());
+    }
+
+    @Override
+    public String getTypeExpression() {
+        return "CharType";
     }
 }

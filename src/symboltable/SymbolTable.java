@@ -8,13 +8,13 @@ public class SymbolTable {
 	private int scope = -1;
 	private List<Map<String,Definition>> table;
 	public SymbolTable()  {
-		table = new ArrayList<Map<String, Definition>>();
+		table = new ArrayList<>();
 		set();
 	}
 
 	public void set() {
 		scope++;
-		table.add(new HashMap<String, Definition>());
+		table.add(new HashMap<>());
 	}
 	
 	public void reset() {

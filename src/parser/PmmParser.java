@@ -157,14 +157,6 @@ public class PmmParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_program; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).enterProgram(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).exitProgram(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PmmVisitor ) return ((PmmVisitor<? extends T>)visitor).visitProgram(this);
 			else return visitor.visitChildren(this);
@@ -285,14 +277,6 @@ public class PmmParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_expression; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).enterExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).exitExpression(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PmmVisitor ) return ((PmmVisitor<? extends T>)visitor).visitExpression(this);
@@ -534,7 +518,7 @@ public class PmmParser extends Parser {
 						setState(100);
 						((ExpressionContext)_localctx).exp2 = ((ExpressionContext)_localctx).expression = expression(3);
 
-						                              ((ExpressionContext)_localctx).ast =  new ArithmeticExpression(
+						                              ((ExpressionContext)_localctx).ast =  new ArithmeticComparisonExpression(
 						                              ((ExpressionContext)_localctx).OP.getText()
 						                              , ((ExpressionContext)_localctx).exp1.ast
 						                              , ((ExpressionContext)_localctx).exp2.ast
@@ -564,7 +548,7 @@ public class PmmParser extends Parser {
 						setState(105);
 						((ExpressionContext)_localctx).exp2 = ((ExpressionContext)_localctx).expression = expression(2);
 
-						                              ((ExpressionContext)_localctx).ast =  new ArithmeticComparisonExpression(
+						                              ((ExpressionContext)_localctx).ast =  new LogicComparisonExpression(
 						                              ((ExpressionContext)_localctx).OP.getText()
 						                              , ((ExpressionContext)_localctx).exp1.ast
 						                              , ((ExpressionContext)_localctx).exp2.ast
@@ -670,14 +654,6 @@ public class PmmParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_statement; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).enterStatement(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).exitStatement(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PmmVisitor ) return ((PmmVisitor<? extends T>)visitor).visitStatement(this);
@@ -884,14 +860,6 @@ public class PmmParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_function_definition; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).enterFunction_definition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).exitFunction_definition(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PmmVisitor ) return ((PmmVisitor<? extends T>)visitor).visitFunction_definition(this);
 			else return visitor.visitChildren(this);
@@ -984,14 +952,6 @@ public class PmmParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_function_body; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).enterFunction_body(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).exitFunction_body(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PmmVisitor ) return ((PmmVisitor<? extends T>)visitor).visitFunction_body(this);
 			else return visitor.visitChildren(this);
@@ -1070,14 +1030,6 @@ public class PmmParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_function_arguments; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).enterFunction_arguments(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).exitFunction_arguments(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PmmVisitor ) return ((PmmVisitor<? extends T>)visitor).visitFunction_arguments(this);
@@ -1163,14 +1115,6 @@ public class PmmParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_function_parameter_definition; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).enterFunction_parameter_definition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).exitFunction_parameter_definition(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PmmVisitor ) return ((PmmVisitor<? extends T>)visitor).visitFunction_parameter_definition(this);
 			else return visitor.visitChildren(this);
@@ -1246,14 +1190,6 @@ public class PmmParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_parameter_definition; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).enterParameter_definition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).exitParameter_definition(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PmmVisitor ) return ((PmmVisitor<? extends T>)visitor).visitParameter_definition(this);
 			else return visitor.visitChildren(this);
@@ -1306,14 +1242,6 @@ public class PmmParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_body; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).enterBody(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).exitBody(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PmmVisitor ) return ((PmmVisitor<? extends T>)visitor).visitBody(this);
@@ -1405,14 +1333,6 @@ public class PmmParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_variable_definition; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).enterVariable_definition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).exitVariable_definition(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PmmVisitor ) return ((PmmVisitor<? extends T>)visitor).visitVariable_definition(this);
 			else return visitor.visitChildren(this);
@@ -1442,7 +1362,7 @@ public class PmmParser extends Parser {
 
 				            for (VariableDefinition varDef: _localctx.ast)
 				                if(varDef.getName().equals(((Variable_definitionContext)_localctx).ID2.getText()))
-				                    new ErrorType("Repeated identifier in variable definition" + " " + varDef.getName(), ((Variable_definitionContext)_localctx).ID2.getLine(), ((Variable_definitionContext)_localctx).ID2.getCharPositionInLine() + 1);
+				                    new ErrorType("Repeated identifier in variable definition: " + varDef.getName() + ".", ((Variable_definitionContext)_localctx).ID2.getLine(), ((Variable_definitionContext)_localctx).ID2.getCharPositionInLine() + 1);
 
 				            _localctx.ast.add(new VariableDefinition(null, ((Variable_definitionContext)_localctx).ID2.getText(), ((Variable_definitionContext)_localctx).ID2.getLine(), ((Variable_definitionContext)_localctx).ID2.getCharPositionInLine() + 1));
 				        
@@ -1487,14 +1407,6 @@ public class PmmParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_type; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).enterType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).exitType(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PmmVisitor ) return ((PmmVisitor<? extends T>)visitor).visitType(this);
@@ -1550,14 +1462,6 @@ public class PmmParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_type_simple; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).enterType_simple(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).exitType_simple(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PmmVisitor ) return ((PmmVisitor<? extends T>)visitor).visitType_simple(this);
@@ -1633,14 +1537,6 @@ public class PmmParser extends Parser {
 		}
 		@Override public int getRuleIndex() { return RULE_type_complex; }
 		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).enterType_complex(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).exitType_complex(this);
-		}
-		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PmmVisitor ) return ((PmmVisitor<? extends T>)visitor).visitType_complex(this);
 			else return visitor.visitChildren(this);
@@ -1689,7 +1585,7 @@ public class PmmParser extends Parser {
 
 					                for(RecordField rf: _localctx.recordFields)
 					                    if(rf.getName().equals(def.getName()))
-					                        new ErrorType("Repeated identifier in struct" + " " + rf.getName(), def.getLine(), def.getColumn());
+					                        new ErrorType("Repeated identifier in struct: " + rf.getName() + ".", def.getLine(), def.getColumn());
 
 					                _localctx.recordFields.add(new RecordField(def.getName(), def.getType(), def.getLine(), def.getColumn()));
 					            }
@@ -1728,14 +1624,6 @@ public class PmmParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_void_type; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).enterVoid_type(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof PmmListener ) ((PmmListener)listener).exitVoid_type(this);
-		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof PmmVisitor ) return ((PmmVisitor<? extends T>)visitor).visitVoid_type(this);

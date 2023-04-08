@@ -1,5 +1,6 @@
 package semantic;
 
+import ast.astnode.Program;
 import ast.definition.FunctionDefinition;
 import ast.expression.*;
 import ast.functioninvocation.FunctionInvocation;
@@ -14,10 +15,12 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
         arithmeticComparisonExpression.setLValue(false);
 
         arithmeticComparisonExpression.setType(
-                arithmeticComparisonExpression.getLeft().getType().asComparison(
+                arithmeticComparisonExpression.getLeft().getType().asLogical(
                         arithmeticComparisonExpression.getRight().getType()
                         , arithmeticComparisonExpression
                 ));
+
+        arithmeticComparisonExpression.getType().accept(this, null);
 
         return null;
     }
@@ -33,6 +36,8 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
                         , arithmeticExpression
                 ));
 
+        arithmeticExpression.getType().accept(this, null);
+
         return null;
     }
 
@@ -47,6 +52,8 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
                         , arrayIndexExpression
                 ));
 
+        arrayIndexExpression.getType().accept(this, null);
+
         return null;
     }
 
@@ -56,10 +63,12 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
         castExpression.setLValue(false);
 
         castExpression.setType(
-                castExpression.getType().castTo(
+                castExpression.getExpressionToCast().getType().castTo(
                         castExpression.getTargetType()
                         , castExpression
                 ));
+
+        castExpression.getType().accept(this, null);
 
         return null;
     }
@@ -76,7 +85,8 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
     @Override
     public Void visit(FieldAccessExpression fieldAccessExpression, Type parameter) {
         super.visit(fieldAccessExpression, null);
-        fieldAccessExpression.setLValue(false);
+        // TODO Set to true because v[6] = 2;
+        fieldAccessExpression.setLValue(true);
 
         fieldAccessExpression.setType(
                 fieldAccessExpression.getAccessed().getType().dot(
@@ -147,6 +157,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
 
     @Override
     public Void visit(VariableExpression variableExpression, Type parameter) {
+        super.visit(variableExpression, null);
         variableExpression.setLValue(true);
 
         variableExpression.setType(variableExpression.getDefinition().getType());
@@ -159,12 +170,17 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
         super.visit(functionInvocation, null);
         functionInvocation.setLValue(false);
 
+        // Check number of parameters.
+        // Check type of parameters.
+        // Check return type, if void no return.
+
         /*
         * Posiblemente lo este liando y a la functionInvocation le tenga que meter function type como tipo
         * si el returntype es built in y sus argumentos tambien, en caso contrario le meto ErrorType.
         * */
 
-        functionInvocation.setType(functionInvocation.getVariableExpression().getDefinition().getType().asBuiltIn(functionInvocation));
+        FunctionType returnType = (FunctionType) functionInvocation.getVariableExpression().getDefinition().getType();
+        functionInvocation.setType(returnType.getReturnType());
 
         /*
         // Comprobamos que el return type de la funcion es built in
@@ -196,7 +212,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
     public Void visit(AssignmentStatement assignmentStatement, Type parameter) {
         super.visit(assignmentStatement, null);
 
-        if(assignmentStatement.getLeft().getLValue()) {
+        if(!assignmentStatement.getLeft().getLValue()) {
             new ErrorType("Required lValue in left part of assignment statement", assignmentStatement.getLeft().getLine(), assignmentStatement.getLeft().getColumn());
         }
 
@@ -213,10 +229,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
     public Void visit(PrintStatement printStatement, Type parameter) {
         super.visit(printStatement, null);
 
-        printStatement.getPrintExpressions().forEach(expression -> {
-            if(expression.getLValue())
-                new ErrorType("Required lValue in left part of assignment statement", expression.getLine(), expression.getColumn());
-        });
+        // Check if we cant only print BuiltIn types.
 
         printStatement.getPrintExpressions().forEach(expression -> {
             expression.setType(expression.getType().asBuiltIn(printStatement));
@@ -230,8 +243,8 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
         super.visit(readStatement, null);
 
         readStatement.getReadExpressions().forEach(expression -> {
-            if(expression.getLValue())
-                new ErrorType("Required lValue in left part of assignment statement", expression.getLine(), expression.getColumn());
+            if(!expression.getLValue())
+                new ErrorType("Required lValue in expression of read statement", expression.getLine(), expression.getColumn());
         });
 
         readStatement.getReadExpressions().forEach(expression -> {
@@ -248,7 +261,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
     public Void visit(IfElseStatement ifElseStatement, Type parameter) {
         super.visit(ifElseStatement, null);
 
-        ifElseStatement.getCondition().setType(ifElseStatement.getCondition().getType().asLogical(ifElseStatement));
+        ifElseStatement.getCondition().getType().asLogical(ifElseStatement);
 
         return null;
     }
@@ -257,7 +270,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
     public Void visit(WhileStatement whileStatement, Type parameter) {
         super.visit(whileStatement, null);
 
-        whileStatement.getCondition().setType(whileStatement.getCondition().getType().asBuiltIn(whileStatement));
+        whileStatement.getCondition().getType().asLogical(whileStatement);
 
         return null;
     }
@@ -275,7 +288,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
     public Void visit(ReturnStatement returnStatement, Type parameter) {
         super.visit(returnStatement, null);
 
-        returnStatement.getReturnExpression().setType(returnStatement.getReturnExpression().getType().mustBeCompatible(parameter, returnStatement));
+        returnStatement.getReturnExpression().getType().mustBeCompatible(parameter, returnStatement);
 
         return null;
     }
