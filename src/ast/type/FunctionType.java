@@ -1,6 +1,7 @@
 package ast.type;
 
 
+import ast.astnode.ASTNode;
 import ast.definition.VariableDefinition;
 import semantic.Visitor;
 
@@ -34,6 +35,29 @@ public class FunctionType extends AbstractType {
     @Override
     public String getTypeExpression() {
         return "FunctionType";
+    }
+
+    @Override
+    public Type checkArgumentTypes(List<Type> types, ASTNode node) {
+        Type argumentInvocation;
+        Type argumentDefinition;
+
+        StringBuilder msg = new StringBuilder();
+
+        if(types.size() != arguments.size()) {
+            msg.append(String.format("Invalid number of parameters passed; Passed: %d, Requested: %d", types.size(), arguments.size()));
+        } else {
+            for(int i = 0; i < types.size(); i++) {
+                argumentInvocation = types.get(i);
+                argumentDefinition = arguments.get(i).getType();
+                if(!(argumentInvocation.equals(argumentDefinition)))
+                    msg.append(String.format("\nFunction invocation argument at index: %d has mismatched type %s, requested type %s.", i, argumentInvocation, argumentDefinition));
+
+
+            }
+        }
+        if(msg.length() == 0) return this;
+        return new ErrorType(msg.toString(), node.getLine(), node.getColumn());
     }
 
     @Override

@@ -2,7 +2,10 @@ package ast.type;
 
 import ast.astnode.ASTNode;
 import ast.astnode.AbstractASTNode;
+import ast.expression.Expression;
 import semantic.Visitor;
+
+import java.util.List;
 
 public abstract class AbstractType extends AbstractASTNode implements Type {
 
@@ -17,7 +20,7 @@ public abstract class AbstractType extends AbstractASTNode implements Type {
 
     @Override
     public Type squareBrackets(Type type, ASTNode node) {
-        return new ErrorType(String.format("Index operation not supported between %s and %s types.", this, type), node.getLine(), node.getColumn());
+        return new ErrorType(String.format("Index operation not supported for %s type.", this), node.getLine(), node.getColumn());
     }
 
     @Override
@@ -66,8 +69,10 @@ public abstract class AbstractType extends AbstractASTNode implements Type {
     }
 
     @Override
-    public abstract String getTypeExpression();
+    public Type checkArgumentTypes(List<Type> types, ASTNode node) {
+        return new ErrorType("Type does not support arguments.", node.getLine(), node.getColumn());
+    }
 
     @Override
-    public abstract <TP, TR> TR accept(Visitor<TP, TR> v, TP parameter);
+    public abstract String getTypeExpression();
 }

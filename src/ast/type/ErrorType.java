@@ -74,7 +74,7 @@ public class ErrorType extends AbstractType {
     }
 
     @Override
-    public Type canPromote(Type t, ASTNode node) { return this; }
+    public Type canPromote(Type type, ASTNode node) { return this; }
 
     @Override
     public String getTypeExpression() {

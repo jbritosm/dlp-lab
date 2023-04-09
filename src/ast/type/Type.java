@@ -1,6 +1,9 @@
 package ast.type;
 
 import ast.astnode.ASTNode;
+import ast.expression.Expression;
+
+import java.util.List;
 
 public interface Type extends ASTNode {
 
@@ -16,4 +19,5 @@ public interface Type extends ASTNode {
     Type asBuiltIn(ASTNode node);
     Type mustBeCompatible(Type type, ASTNode node);
     Type canPromote(Type type, ASTNode node);
+    Type checkArgumentTypes(List<Type> types, ASTNode node);
 }

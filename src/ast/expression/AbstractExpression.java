@@ -12,10 +12,6 @@ public abstract class AbstractExpression extends AbstractASTNode implements Expr
         super(line, column);
     }
 
-
-    @Override
-    public abstract <TP, TR> TR accept(Visitor<TP, TR> v, TP parameter);
-
     @Override
     public boolean getLValue() {
         return lValue;

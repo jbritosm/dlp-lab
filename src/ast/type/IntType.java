@@ -34,6 +34,8 @@ public class IntType extends AbstractType {
     public Type asArithmetic(Type t, ASTNode node) {
         if(t instanceof IntType)
             return t;
+        if(t instanceof ErrorType)
+            return t;
         return new ErrorType(String.format("An integer cannot operate with a %s", t), node.getLine(), node.getColumn());
     }
 
@@ -77,21 +79,17 @@ public class IntType extends AbstractType {
 
     @Override
     public Type mustBeCompatible(Type t, ASTNode node) {
-        Type returnType;
-        if(t instanceof FunctionType) {
-            returnType = ((FunctionType) t).getReturnType();
-            if (returnType instanceof IntType)
-                return returnType;
-            return new ErrorType(String.format("Return type: %s of the function not compatible with IntegerType", returnType.getTypeExpression()), node.getLine(), node.getColumn());
-        }
-        return new ErrorType(String.format("Return type: %s of the function not compatible with IntegerType", t.getTypeExpression()), node.getLine(), node.getColumn());
+        if(t.getClass().equals(this.getClass())) return t;
+        return new ErrorType(String.format("%s is not compatible with IntType for return type.", t), node.getLine(), node.getColumn());
     }
 
     @Override
     public Type canPromote(Type t, ASTNode node) {
         if(t instanceof IntType)
             return t;
-        return new ErrorType(String.format("%s type cannot be promoted to IntegerType.", t), node.getLine(), node.getColumn());
+        if(t instanceof ErrorType)
+            return t;
+        return new ErrorType(String.format("IntType cannot be promoted to %s.", t), node.getLine(), node.getColumn());
     }
 
     @Override

@@ -7,6 +7,10 @@ import ast.functioninvocation.FunctionInvocation;
 import ast.statement.*;
 import ast.type.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
 
     @Override
@@ -20,7 +24,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
                         , arithmeticComparisonExpression
                 ));
 
-        arithmeticComparisonExpression.getType().accept(this, null);
+
 
         return null;
     }
@@ -36,7 +40,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
                         , arithmeticExpression
                 ));
 
-        arithmeticExpression.getType().accept(this, null);
+
 
         return null;
     }
@@ -52,8 +56,6 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
                         , arrayIndexExpression
                 ));
 
-        arrayIndexExpression.getType().accept(this, null);
-
         return null;
     }
 
@@ -68,7 +70,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
                         , castExpression
                 ));
 
-        castExpression.getType().accept(this, null);
+
 
         return null;
     }
@@ -85,7 +87,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
     @Override
     public Void visit(FieldAccessExpression fieldAccessExpression, Type parameter) {
         super.visit(fieldAccessExpression, null);
-        // TODO Set to true because v[6] = 2;
+        // TODO Set to true because nums.a = 2;
         fieldAccessExpression.setLValue(true);
 
         fieldAccessExpression.setType(
@@ -170,40 +172,9 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
         super.visit(functionInvocation, null);
         functionInvocation.setLValue(false);
 
-        // Check number of parameters.
-        // Check type of parameters.
-        // Check return type, if void no return.
+        List<Type> argumentTypes = functionInvocation.getArguments().stream().map(Expression::getType).toList();
 
-        /*
-        * Posiblemente lo este liando y a la functionInvocation le tenga que meter function type como tipo
-        * si el returntype es built in y sus argumentos tambien, en caso contrario le meto ErrorType.
-        * */
-
-        FunctionType returnType = (FunctionType) functionInvocation.getVariableExpression().getDefinition().getType();
-        functionInvocation.setType(returnType.getReturnType());
-
-        /*
-        // Comprobamos que el return type de la funcion es built in
-        Type type = functionInvocation.getVariableExpression().getType().asBuiltIn(functionInvocation);
-        Type argType;
-
-        // Si no es built in devuelve ErrorType y salta al return null;
-        if(type instanceof ErrorType) {
-            functionInvocation.setType(type);
-        } else {
-            // Si el return type es built in procesamos los argumentos
-            for(Expression exp : functionInvocation.getArguments()) {
-                argType = exp.getType().asBuiltIn(functionInvocation);
-                // En caso de que haya un error type, se para de procesar.
-                if(argType instanceof ErrorType) {
-                    functionInvocation.setType(argType);
-                    break;
-                } else {
-                    functionInvocation.setType(argType);
-                }
-            }
-        }
-        */
+        functionInvocation.setType(functionInvocation.getVariableExpression().getType().checkArgumentTypes(argumentTypes, functionInvocation));
 
         return null;
     }
@@ -211,6 +182,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
     @Override
     public Void visit(AssignmentStatement assignmentStatement, Type parameter) {
         super.visit(assignmentStatement, null);
+        // TODO If set to true the following is allowed a = b = c;
 
         if(!assignmentStatement.getLeft().getLValue()) {
             new ErrorType("Required lValue in left part of assignment statement", assignmentStatement.getLeft().getLine(), assignmentStatement.getLeft().getColumn());
@@ -278,15 +250,13 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
     // TODO Check if its ok.
     @Override
     public Void visit(FunctionDefinition functionDefinition, Type parameter) {
-        functionDefinition.getStatements().forEach(statement -> statement.accept(this, functionDefinition.getType()));
-        functionDefinition.getType().accept(this, null);
-
+        super.visit(functionDefinition, ((FunctionType) functionDefinition.getType()).getReturnType());
         return null;
     }
 
     @Override
     public Void visit(ReturnStatement returnStatement, Type parameter) {
-        super.visit(returnStatement, null);
+        super.visit(returnStatement, parameter);
 
         returnStatement.getReturnExpression().getType().mustBeCompatible(parameter, returnStatement);
 

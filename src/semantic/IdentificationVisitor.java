@@ -30,17 +30,20 @@ public class IdentificationVisitor extends AbstractVisitor<Void, Void> {
 
     @Override
     public Void visit(VariableExpression variableExpression, Void parameter) {
-        Definition varDef = st.find(variableExpression.getName());
+        Definition varDef = st.findInCurrentScope(variableExpression.getName());
+        if(varDef == null) varDef = st.find(variableExpression.getName());
+
         if(varDef == null) {
-            variableExpression.setDefinition(new VariableDefinition(new ErrorType("Definition: " + variableExpression.getName() + ", not defined"
+            varDef = new VariableDefinition(new ErrorType("Definition: " + variableExpression.getName() + ", not defined"
                                                                     , variableExpression.getLine()
                                                                     , variableExpression.getColumn())
                                                                     , variableExpression.getName()
                                                                     , variableExpression.getLine()
-                                                                    , variableExpression.getColumn()));
-        } else {
-            variableExpression.setDefinition(varDef);
+                                                                    , variableExpression.getColumn());
         }
+
+        variableExpression.setDefinition(varDef);
+
         return null;
     }
 

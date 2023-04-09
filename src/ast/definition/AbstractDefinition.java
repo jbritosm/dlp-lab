@@ -2,6 +2,7 @@ package ast.definition;
 
 import ast.astnode.AbstractASTNode;
 import ast.type.Type;
+import semantic.Visitor;
 
 public abstract class AbstractDefinition extends AbstractASTNode implements Definition {
 
