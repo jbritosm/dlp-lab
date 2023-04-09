@@ -1,6 +1,7 @@
 package ast.type;
 
 import ast.astnode.ASTNode;
+import com.sun.jdi.DoubleType;
 import semantic.Visitor;
 
 public class RealType extends AbstractType {
@@ -37,20 +38,20 @@ public class RealType extends AbstractType {
     }
 
     @Override
-    public Type asLogical(Type t, ASTNode node) {
-        if(t instanceof RealType)
+    public Type asComparison(Type type, ASTNode node) {
+        if(type instanceof RealType)
             return IntType.getInstance();
-        return new ErrorType(String.format("Real type cannot be compared with %s type.", t), node.getLine(), node.getColumn());
+        return new ErrorType(String.format("Comparison operation not allowed between IntType and %s", type), node.getLine(), node.getColumn());
     }
 
     @Override
     public Type asUnaryMinus(ASTNode node) {
-        return this;
+        return RealType.getInstance();
     }
 
     @Override
     public Type asBuiltIn(ASTNode node) {
-        return this;
+        return RealType.getInstance();
     }
 
     @Override
@@ -64,7 +65,7 @@ public class RealType extends AbstractType {
 
     @Override
     public Type mustBeCompatible(Type t, ASTNode node) {
-        if(t.getClass().equals(this.getClass())) return t;
+        if(t instanceof RealType) return t;
         return new ErrorType(String.format("%s is not compatible with RealType for return type.", t), node.getLine(), node.getColumn());
     }
 

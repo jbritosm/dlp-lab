@@ -33,6 +33,8 @@ public class CharType extends AbstractType {
     public Type asArithmetic(Type t, ASTNode node) {
         if(t instanceof IntType)
             return t;
+        if(t instanceof CharType)
+            return IntType.getInstance();
         return new ErrorType(String.format("An integer cannot operate with a %s", t), node.getLine(), node.getColumn());
     }
 
@@ -57,7 +59,7 @@ public class CharType extends AbstractType {
 
     @Override
     public Type mustBeCompatible(Type t, ASTNode node) {
-        if(t.getClass().equals(this.getClass())) return t;
+        if(t instanceof CharType) return t;
         return new ErrorType(String.format("%s is not compatible with CharType for return type.", t), node.getLine(), node.getColumn());
     }
 
@@ -68,6 +70,13 @@ public class CharType extends AbstractType {
         if(t instanceof ErrorType)
             return t;
         return new ErrorType(String.format("CharType cannot be promoted to %s.", t), node.getLine(), node.getColumn());
+    }
+
+    @Override
+    public Type asComparison(Type type, ASTNode node) {
+        if(type instanceof CharType)
+            return IntType.getInstance();
+        return new ErrorType(String.format("Comparison operation not allowed between CharType and %s", type), node.getLine(), node.getColumn());
     }
 
     @Override

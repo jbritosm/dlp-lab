@@ -19,7 +19,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
         arithmeticComparisonExpression.setLValue(false);
 
         arithmeticComparisonExpression.setType(
-                arithmeticComparisonExpression.getLeft().getType().asLogical(
+                arithmeticComparisonExpression.getLeft().getType().asComparison(
                         arithmeticComparisonExpression.getRight().getType()
                         , arithmeticComparisonExpression
                 ));

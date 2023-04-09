@@ -26,6 +26,7 @@ public class SymbolTable {
 	* If the definition is already defined return false.
 	* */
 	public boolean insert(Definition definition) {
+		// If the definition is defined in the current scope return false.
 		if(findInCurrentScope(definition.getName()) != null)
 			return false;
 

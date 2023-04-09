@@ -12,6 +12,7 @@ public interface Type extends ASTNode {
     Type squareBrackets(Type type, ASTNode node);
     Type castTo(Type type, ASTNode node);
     Type dot(String id, ASTNode node);
+    Type asComparison(Type type, ASTNode node);
     Type asLogical(Type type, ASTNode node);
     Type asLogical(ASTNode node);
     Type asNegation(ASTNode node);

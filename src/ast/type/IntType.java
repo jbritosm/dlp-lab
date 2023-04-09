@@ -34,36 +34,44 @@ public class IntType extends AbstractType {
     public Type asArithmetic(Type t, ASTNode node) {
         if(t instanceof IntType)
             return t;
+        if(t instanceof CharType) // TODO Are we allowed to do 'a' + 1?
+            return IntType.getInstance();
         if(t instanceof ErrorType)
             return t;
         return new ErrorType(String.format("An integer cannot operate with a %s", t), node.getLine(), node.getColumn());
     }
 
     @Override
-    public Type asLogical(Type t, ASTNode node) {
-        if(t instanceof IntType)
-            return t;
-        return new ErrorType(String.format("Integer type cannot be compared with %s type.", t), node.getLine(), node.getColumn());
+    public Type asComparison(Type type, ASTNode node) {
+        if(type instanceof IntType)
+            return IntType.getInstance();
+        return new ErrorType(String.format("Comparison operation not allowed between IntType and %s", type), node.getLine(), node.getColumn());
     }
 
     @Override
+    public Type asLogical(Type type, ASTNode node) {
+        if(type instanceof IntType)
+            return IntType.getInstance();
+        return new ErrorType(String.format("Logical operation not allowed between IntType and %s.", type), node.getLine(), node.getColumn());
+    }
+    @Override
     public Type asLogical(ASTNode node) {
-        return this;
+        return IntType.getInstance();
     }
 
     @Override
     public Type asNegation(ASTNode node) {
-        return this;
+        return IntType.getInstance();
     }
 
     @Override
     public Type asUnaryMinus(ASTNode node) {
-        return this;
+        return IntType.getInstance();
     }
 
     @Override
     public Type asBuiltIn(ASTNode node) {
-        return this;
+        return IntType.getInstance();
     }
 
     @Override
@@ -79,7 +87,7 @@ public class IntType extends AbstractType {
 
     @Override
     public Type mustBeCompatible(Type t, ASTNode node) {
-        if(t.getClass().equals(this.getClass())) return t;
+        if(t instanceof IntType) return t;
         return new ErrorType(String.format("%s is not compatible with IntType for return type.", t), node.getLine(), node.getColumn());
     }
 

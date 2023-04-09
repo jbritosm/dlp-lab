@@ -34,13 +34,18 @@ public abstract class AbstractType extends AbstractASTNode implements Type {
     }
 
     @Override
+    public Type asComparison(Type type, ASTNode node) {
+        return new ErrorType(String.format("Comparison operation not supported between %s and %s types.", this, type.toString()), node.getLine(), node.getColumn());
+    }
+
+    @Override
     public Type asLogical(Type type, ASTNode node) {
-        return new ErrorType(String.format("Logical operation not supported between %s and %s types.", this, type.toString()), node.getLine(), node.getColumn());
+        return new ErrorType(String.format("Logical operation not supported between %s and %s types.", this, type), node.getLine(), node.getColumn());
     }
 
     @Override
     public Type asLogical(ASTNode node) {
-        return new ErrorType(String.format("Logic operation not supported for %s type.", this), node.getLine(), node.getColumn());
+        return new ErrorType(String.format("Logical operation not supported for %s type.", this), node.getLine(), node.getColumn());
     }
 
     @Override
