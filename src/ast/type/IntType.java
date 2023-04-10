@@ -104,4 +104,9 @@ public class IntType extends AbstractType {
     public String getTypeExpression() {
         return "IntType";
     }
+
+    @Override
+    public int numberOfBytes() {
+        return 2;
+    }
 }

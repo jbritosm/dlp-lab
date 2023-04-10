@@ -52,8 +52,6 @@ public class FunctionType extends AbstractType {
                 argumentDefinition = arguments.get(i).getType();
                 if(!(argumentInvocation.equals(argumentDefinition)))
                     msg.append(String.format("\nFunction invocation argument at index: %d has mismatched type %s, requested type %s.", i, argumentInvocation, argumentDefinition));
-
-
             }
         }
         if(msg.length() == 0) return this;
@@ -65,5 +63,10 @@ public class FunctionType extends AbstractType {
         v.visit(this, parameter);
 
         return null;
+    }
+
+    @Override
+    public int numberOfBytes() {
+        return 2;
     }
 }

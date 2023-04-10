@@ -6,6 +6,7 @@ import semantic.Visitor;
 
 public class VariableDefinition extends AbstractDefinition implements Statement {
 
+    private int offset;
     public VariableDefinition(Type type, String name, int line, int column) {
         super(type, name, line, column);
     }
@@ -15,5 +16,13 @@ public class VariableDefinition extends AbstractDefinition implements Statement 
         v.visit(this, parameter);
 
         return null;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 }

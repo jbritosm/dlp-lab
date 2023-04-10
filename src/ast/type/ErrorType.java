@@ -80,4 +80,9 @@ public class ErrorType extends AbstractType {
     public String getTypeExpression() {
         return "ErrorType";
     }
+
+    @Override
+    public int numberOfBytes() {
+       throw new IllegalCallerException("No errors allowed in code generation phase.");
+    }
 }

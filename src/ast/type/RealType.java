@@ -82,4 +82,9 @@ public class RealType extends AbstractType {
     public String getTypeExpression() {
         return "RealType";
     }
+
+    @Override
+    public int numberOfBytes() {
+        return 4;
+    }
 }

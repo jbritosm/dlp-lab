@@ -7,8 +7,7 @@ public class RecordField extends AbstractASTNode {
 
     private String name;
     private Type fieldType;
-
-    private int line, column;
+    private int offset;
 
     public RecordField(String name, Type fieldType, int line, int column) {
         super(line, column);
@@ -24,14 +23,6 @@ public class RecordField extends AbstractASTNode {
         return fieldType;
     }
 
-    public int getLine() {
-        return this.line;
-    }
-
-    public int getColumn() {
-        return this.column;
-    }
-
     @Override
     public <TP, TR> TR accept(Visitor<TP, TR> v, TP parameter) {
         v.visit(this, parameter);
@@ -44,8 +35,14 @@ public class RecordField extends AbstractASTNode {
         return "RecordField{" +
                 "name='" + name + '\'' +
                 ", fieldType=" + fieldType +
-                ", line=" + line +
-                ", column=" + column +
                 '}';
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 }

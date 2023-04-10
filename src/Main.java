@@ -1,3 +1,4 @@
+import codegenerator.OffSetVisitor;
 import org.antlr.v4.runtime.*;
 import introspector.model.IntrospectorModel;
 
@@ -21,7 +22,7 @@ public class Main {
 		PmmLexer lexer = new PmmLexer(input);
 
 		// create a parser that feeds off the tokens buffer
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
+		CommonTokenStream tokens = new CommonTokenStream(lexer); 
 		PmmParser parser = new PmmParser(tokens);	
 		ASTNode ast = parser.program().ast;
 
@@ -35,6 +36,7 @@ public class Main {
 		}
 		else{
 			// * The AST is shown
+			ast.accept(new OffSetVisitor(),null);
 			IntrospectorModel model=new IntrospectorModel("Program", ast);
 			new IntrospectorView("Introspector", model);
 		}

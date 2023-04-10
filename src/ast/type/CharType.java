@@ -73,6 +73,11 @@ public class CharType extends AbstractType {
     }
 
     @Override
+    public int numberOfBytes() {
+        return 1;
+    }
+
+    @Override
     public Type asComparison(Type type, ASTNode node) {
         if(type instanceof CharType)
             return IntType.getInstance();

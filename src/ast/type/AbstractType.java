@@ -79,5 +79,8 @@ public abstract class AbstractType extends AbstractASTNode implements Type {
     }
 
     @Override
-    public abstract String getTypeExpression();
+    public int numberOfBytes() {
+        return 0;
+    }
+
 }
