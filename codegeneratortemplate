@@ -1,0 +1,43 @@
+execute[[Program : program -> definition*]]() =
+
+    for(Definition definition : definition*)
+        if(definition instanceof VarDefinition)
+            execute[[definition]]()
+
+    <call main>
+    <halt>
+
+    for(Definition definition : definition*)
+        if(definition instanceof FunctionDefinition)
+            execute[[definition]]()
+
+--------------------------------------------------
+
+execute[[Print : statement -> expression]]() =
+
+    value[[expression]]()
+    <out> expression.type.suffix()
+
+--------------------------------------------------
+
+execute[[Input : statement -> expression]]() =
+
+    address[[expression]]()
+    <in> expression.type.suffix()
+    <store> expression.type.suffix()
+
+--------------------------------------------------
+
+address[[Variable : expression -> ID]]() =
+    if(expression.definition.scope == 0)
+        <pusha> expression.definition.offset
+    else
+        <push> bp
+        <push> expression.definition.offset
+        <addi>
+
+--------------------------------------------------
+
+value[[Variable : expression -> ID]]() =
+    address[[expression]]()
+    <load> expression.type.suffix()

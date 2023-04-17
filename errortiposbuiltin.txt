@@ -1,3 +1,0 @@
-def a(a:struct{b:int;};): {}
-
-def main(): {}
