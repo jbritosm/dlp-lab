@@ -1,10 +1,12 @@
 package ast.definition;
 
 import ast.statement.Statement;
+import ast.type.FunctionType;
 import ast.type.Type;
 import semantic.Visitor;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class FunctionDefinition extends AbstractDefinition {
 
@@ -32,5 +34,28 @@ public class FunctionDefinition extends AbstractDefinition {
         v.visit(this, parameter);
 
         return null;
+    }
+
+    public int localsNumberOfBytes() {
+        int numberOfBytes = 0;
+
+        for(Statement stm : statements) {
+            if(stm instanceof VariableDefinition)
+                numberOfBytes += ((VariableDefinition) stm).getType().numberOfBytes();
+        }
+
+        return numberOfBytes;
+    }
+
+    public int argumentsNumberOfBytes() {
+        int numberOfBytes = 0;
+
+        FunctionType functionType = (FunctionType) this.getType();
+
+        for(VariableDefinition varDef : functionType.getArguments()) {
+            numberOfBytes += varDef.getType().numberOfBytes();
+        }
+
+        return numberOfBytes;
     }
 }

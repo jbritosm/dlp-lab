@@ -18,7 +18,7 @@ public class Main {
 			System.err.println("Please, pass me the input and output files.");
 			return;
 		}
-
+		
 		// create a lexer that feeds off of input CharStream
 		CharStream input = CharStreams.fromFileName(args[0]);
 		PmmLexer lexer = new PmmLexer(input);

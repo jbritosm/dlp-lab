@@ -22,4 +22,5 @@ public interface Type extends ASTNode {
     Type canPromote(Type type, ASTNode node);
     Type checkArgumentTypes(List<Type> types, ASTNode node);
     int numberOfBytes();
+    String getSuffix();
 }

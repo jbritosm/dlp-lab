@@ -3,7 +3,7 @@ package codegenerator;
 import ast.expression.*;
 import semantic.AbstractVisitor;
 
-public class ValueCGVisitor extends AbstractVisitor<Void, Void> {
+public class ValueCGVisitor extends AbstractVisitor<Object, Void> {
 
     /**
      * value[[VariableExpression : expression -> ID]]() =
@@ -11,7 +11,7 @@ public class ValueCGVisitor extends AbstractVisitor<Void, Void> {
      *     <load> expression.type.suffix()
      */
     @Override
-    public Void visit(VariableExpression variableExpression, Void parameter) {
+    public Void visit(VariableExpression variableExpression, Object parameter) {
         return null;
     }
 
@@ -32,7 +32,7 @@ public class ValueCGVisitor extends AbstractVisitor<Void, Void> {
      *
      */
     @Override
-    public Void visit(ArithmeticComparisonExpression arithmeticComparisonExpression, Void parameter) {
+    public Void visit(ArithmeticComparisonExpression arithmeticComparisonExpression, Object parameter) {
         return null;
     }
 
@@ -48,7 +48,7 @@ public class ValueCGVisitor extends AbstractVisitor<Void, Void> {
      *  }
      */
     @Override
-    public Void visit(LogicComparisonExpression logicComparisonExpression, Void parameter) {
+    public Void visit(LogicComparisonExpression logicComparisonExpression, Object parameter) {
         return null;
     }
 
@@ -58,7 +58,7 @@ public class ValueCGVisitor extends AbstractVisitor<Void, Void> {
      *  <not>
      */
     @Override
-    public Void visit(NotExpression notExpression, Void parameter) {
+    public Void visit(NotExpression notExpression, Object parameter) {
         return null;
     }
 
@@ -78,7 +78,7 @@ public class ValueCGVisitor extends AbstractVisitor<Void, Void> {
      *
      */
     @Override
-    public Void visit(ArithmeticExpression arithmeticExpression, Void parameter) {
+    public Void visit(ArithmeticExpression arithmeticExpression, Object parameter) {
         return null;
     }
 
@@ -88,7 +88,7 @@ public class ValueCGVisitor extends AbstractVisitor<Void, Void> {
      *
      */
     @Override
-    public Void visit(CastExpression castExpression, Void parameter) {
+    public Void visit(CastExpression castExpression, Object parameter) {
         return null;
     }
 
@@ -97,7 +97,7 @@ public class ValueCGVisitor extends AbstractVisitor<Void, Void> {
      *  <pushi> expression.value
      */
     @Override
-    public Void visit(IntLiteralExpression intLiteralExpression, Void parameter) {
+    public Void visit(IntLiteralExpression intLiteralExpression, Object parameter) {
         return null;
     }
 
@@ -106,7 +106,7 @@ public class ValueCGVisitor extends AbstractVisitor<Void, Void> {
      *  <pushf> expression.value
      */
     @Override
-    public Void visit(RealLiteralExpression realLiteralExpression, Void parameter) {
+    public Void visit(RealLiteralExpression realLiteralExpression, Object parameter) {
         return null;
     }
 
@@ -115,7 +115,7 @@ public class ValueCGVisitor extends AbstractVisitor<Void, Void> {
      *  <pushb> expression.value
      */
     @Override
-    public Void visit(CharLiteralExpression charLiteralExpression, Void parameter) {
+    public Void visit(CharLiteralExpression charLiteralExpression, Object parameter) {
         return null;
     }
 
@@ -131,7 +131,7 @@ public class ValueCGVisitor extends AbstractVisitor<Void, Void> {
      *
      */
     @Override
-    public Void visit(UnaryMinusExpression unaryMinusExpression, Void parameter) {
+    public Void visit(UnaryMinusExpression unaryMinusExpression, Object parameter) {
         return null;
     }
 

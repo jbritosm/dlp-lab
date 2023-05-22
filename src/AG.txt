@@ -1,5 +1,8 @@
 // Expression abstract grammar
 (1) ArithmeticExpression: expression1 -> expression2 (+|-|*|/) expression3
+// Expression attribute grammar
+(1) expression1.type = expression2.type.asArithmetic(expression3.type)
+
 (2) ArithmeticComparisonExpression: expression1 -> expression2 (<|>|==|!=|<=|>=) expression3
 (3) ArrayIndexExpression: expression1 -> expression2 expression3
 (4) CastExpression: expression1 -> type expression2

@@ -33,7 +33,8 @@ public class RealType extends AbstractType {
     @Override
     public Type asArithmetic(Type t, ASTNode node) {
         if(t instanceof RealType)
-            return t;
+            return this;
+
         return new ErrorType(String.format("A double cannot operate with a %s", t), node.getLine(), node.getColumn());
     }
 
@@ -86,5 +87,10 @@ public class RealType extends AbstractType {
     @Override
     public int numberOfBytes() {
         return 4;
+    }
+
+    @Override
+    public String getSuffix() {
+        return "f";
     }
 }

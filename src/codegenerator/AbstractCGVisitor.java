@@ -9,159 +9,166 @@ import ast.statement.*;
 import ast.type.*;
 import semantic.Visitor;
 
-public class AbstractCGVisitor<TP, TR> implements Visitor<TR, TP> {
+public class AbstractCGVisitor<TP, TR> implements Visitor<TP, TR> {
+
+    protected CodeGenerator cg;
+    public AbstractCGVisitor(CodeGenerator cg) {
+        this.cg = cg;
+    }
+
+
     @Override
-    public TP visit(Program program, TR parameter) {
+    public TR visit(Program program, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(FunctionDefinition functionDefinition, TR parameter) {
+    public TR visit(FunctionDefinition functionDefinition, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(VariableDefinition variableDefinition, TR parameter) {
+    public TR visit(VariableDefinition variableDefinition, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(ArithmeticComparisonExpression arithmeticComparisonExpression, TR parameter) {
+    public TR visit(ArithmeticComparisonExpression arithmeticComparisonExpression, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(ArithmeticExpression arithmeticExpression, TR parameter) {
+    public TR visit(ArithmeticExpression arithmeticExpression, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(ArrayIndexExpression arrayIndexExpression, TR parameter) {
+    public TR visit(ArrayIndexExpression arrayIndexExpression, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(CastExpression castExpression, TR parameter) {
+    public TR visit(CastExpression castExpression, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(CharLiteralExpression charLiteralExpression, TR parameter) {
+    public TR visit(CharLiteralExpression charLiteralExpression, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(FieldAccessExpression fieldAccessExpression, TR parameter) {
+    public TR visit(FieldAccessExpression fieldAccessExpression, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(IntLiteralExpression intLiteralExpression, TR parameter) {
+    public TR visit(IntLiteralExpression intLiteralExpression, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(LogicComparisonExpression logicComparisonExpression, TR parameter) {
+    public TR visit(LogicComparisonExpression logicComparisonExpression, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(NotExpression notExpression, TR parameter) {
+    public TR visit(NotExpression notExpression, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(RealLiteralExpression realLiteralExpression, TR parameter) {
+    public TR visit(RealLiteralExpression realLiteralExpression, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(UnaryMinusExpression unaryMinusExpression, TR parameter) {
+    public TR visit(UnaryMinusExpression unaryMinusExpression, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(VariableExpression variableExpression, TR parameter) {
+    public TR visit(VariableExpression variableExpression, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(FunctionInvocation functionInvocation, TR parameter) {
+    public TR visit(FunctionInvocation functionInvocation, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(AssignmentStatement assignmentStatement, TR parameter) {
+    public TR visit(AssignmentStatement assignmentStatement, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(IfElseStatement ifElseStatement, TR parameter) {
+    public TR visit(IfElseStatement ifElseStatement, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(PrintStatement printStatement, TR parameter) {
+    public TR visit(PrintStatement printStatement, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(ReadStatement readStatement, TR parameter) {
+    public TR visit(ReadStatement readStatement, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(ReturnStatement returnStatement, TR parameter) {
+    public TR visit(ReturnStatement returnStatement, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(WhileStatement whileStatement, TR parameter) {
+    public TR visit(WhileStatement whileStatement, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(ArrayType arrayType, TR parameter) {
+    public TR visit(ArrayType arrayType, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(CharType charType, TR parameter) {
+    public TR visit(CharType charType, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(ErrorType errorType, TR parameter) {
+    public TR visit(ErrorType errorType, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(FunctionType functionType, TR parameter) {
+    public TR visit(FunctionType functionType, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(IntType intType, TR parameter) {
+    public TR visit(IntType intType, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(RealType realType, TR parameter) {
+    public TR visit(RealType realType, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(RecordField recordField, TR parameter) {
+    public TR visit(RecordField recordField, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(RecordType recordType, TR parameter) {
+    public TR visit(RecordType recordType, TP parameter) {
         return null;
     }
 
     @Override
-    public TP visit(VoidType voidType, TR parameter) {
+    public TR visit(VoidType voidType, TP parameter) {
         return null;
     }
 }

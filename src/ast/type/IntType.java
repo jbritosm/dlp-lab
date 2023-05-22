@@ -36,6 +36,8 @@ public class IntType extends AbstractType {
             return t;
         if(t instanceof CharType) // TODO Are we allowed to do 'a' + 1?
             return IntType.getInstance();
+        if(t instanceof RealType)
+            return RealType.getInstance();
         if(t instanceof ErrorType)
             return t;
         return new ErrorType(String.format("An integer cannot operate with a %s", t), node.getLine(), node.getColumn());
@@ -108,5 +110,10 @@ public class IntType extends AbstractType {
     @Override
     public int numberOfBytes() {
         return 2;
+    }
+
+    @Override
+    public String getSuffix() {
+        return "i";
     }
 }

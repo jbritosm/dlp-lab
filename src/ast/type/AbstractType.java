@@ -2,8 +2,6 @@ package ast.type;
 
 import ast.astnode.ASTNode;
 import ast.astnode.AbstractASTNode;
-import ast.expression.Expression;
-import semantic.Visitor;
 
 import java.util.List;
 
@@ -35,7 +33,7 @@ public abstract class AbstractType extends AbstractASTNode implements Type {
 
     @Override
     public Type asComparison(Type type, ASTNode node) {
-        return new ErrorType(String.format("Comparison operation not supported between %s and %s types.", this, type.toString()), node.getLine(), node.getColumn());
+        return new ErrorType(String.format("Comparison operation not supported between %s and %s types.", this, type), node.getLine(), node.getColumn());
     }
 
     @Override
@@ -83,4 +81,8 @@ public abstract class AbstractType extends AbstractASTNode implements Type {
         return 0;
     }
 
+    @Override
+    public String getSuffix() {
+        return null;
+    }
 }

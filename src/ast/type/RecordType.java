@@ -19,6 +19,13 @@ public class RecordType extends AbstractType {
     public List<RecordField> getFields() {
         return fields;
     }
+    public RecordField getField(String name) {
+        for(RecordField field : fields) {
+            if(field.getName().equals(name))
+                return field;
+        }
+        return null;
+    }
 
     @Override
     public String toString() {

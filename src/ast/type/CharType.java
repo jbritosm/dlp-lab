@@ -88,4 +88,9 @@ public class CharType extends AbstractType {
     public String getTypeExpression() {
         return "CharType";
     }
+
+    @Override
+    public String getSuffix() {
+        return "b";
+    }
 }
