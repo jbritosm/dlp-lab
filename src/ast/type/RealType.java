@@ -93,4 +93,15 @@ public class RealType extends AbstractType {
     public String getSuffix() {
         return "f";
     }
+
+    @Override
+    public String convertTo(Type type) {
+        if(type instanceof RealType)
+            return "";
+        else if(type instanceof IntType)
+            return "\tf2i";
+        else throw new IllegalStateException(String.format("Cannot perform conversion from %s to %s"
+                    , this.getTypeExpression(), type.getTypeExpression()));
+
+    }
 }

@@ -116,4 +116,17 @@ public class IntType extends AbstractType {
     public String getSuffix() {
         return "i";
     }
+
+    @Override
+    public String convertTo(Type type) {
+        if(type instanceof IntType)
+            return "";
+        else if(type instanceof RealType)
+            return "\ti2f";
+        else if(type instanceof CharType)
+            return "\ti2b";
+        else throw new IllegalStateException(String.format("Cannot perform conversion from %s to %s"
+                                                            , this.getTypeExpression(), type.getTypeExpression()));
+
+    }
 }

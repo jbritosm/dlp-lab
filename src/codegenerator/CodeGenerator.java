@@ -24,7 +24,7 @@ public class CodeGenerator {
         this.source();
     }
 
-    private void writeToFile(String string) {
+    public void writeToFile(String string) {
         out.write(string + "\n");
     }
 
@@ -32,30 +32,25 @@ public class CodeGenerator {
         out.close();
     }
 
-    // Comments
-    public void comment(String comment) {
-        writeToFile(String.format("\t' * %s", comment));
-    }
-
     public void push(String suffix, int parameter) {
         switch(suffix) {
             case "b" -> writeToFile(String.format("\tpushb\t%d", parameter));
             case "a" -> writeToFile(String.format("\tpusha\t%d", parameter));
             case "bp" -> writeToFile("\tpush\t bp");
-            default -> writeToFile(String.format("\tpush\t%d", parameter));
+            default -> writeToFile(String.format("\tpushi\t%d", parameter));
         }
 
     }
 
     public void pushf(double realConstant) {
-        writeToFile(String.format("\tpushf\t%f", realConstant));
+        writeToFile("\tpushf\t"+ realConstant);
     }
 
     public void load(String suffix) {
         switch(suffix) {
             case "b" -> writeToFile("\tloadb");
             case "f" -> writeToFile("\tloadf");
-            default -> writeToFile("\tload");
+            default -> writeToFile("\tloadi");
         }
     }
 
@@ -63,7 +58,7 @@ public class CodeGenerator {
         switch (suffix) {
             case "b" -> writeToFile("\tstoreb");
             case "f" -> writeToFile("\tstoref");
-            default -> writeToFile("\tstore");
+            default -> writeToFile("\tstorei");
         }
     }
 
@@ -71,7 +66,7 @@ public class CodeGenerator {
         switch (suffix) {
             case "b" -> writeToFile("\tpopb");
             case "f" -> writeToFile("\tpopf");
-            default -> writeToFile("\tpop");
+            default -> writeToFile("\tpopi");
         }
     }
 
@@ -79,7 +74,7 @@ public class CodeGenerator {
         switch (suffix) {
             case "b" -> writeToFile("\tdupb");
             case "f" -> writeToFile("\tdupf");
-            default -> writeToFile("\tdup");
+            default -> writeToFile("\tdupi");
         }
     }
 
@@ -88,35 +83,35 @@ public class CodeGenerator {
         if(suffix.equals("f"))
             writeToFile("\taddf");
         else
-            writeToFile("\tadd");
+            writeToFile("\taddi");
     }
 
     public void sub(String suffix) {
         if(suffix.equals("f"))
             writeToFile("\tsubf");
         else
-            writeToFile("\tsub");
+            writeToFile("\tsubi");
     }
 
     public void mul(String suffix) {
         if(suffix.equals("f"))
             writeToFile("\tmulf");
         else
-            writeToFile("\tmul");
+            writeToFile("\tmuli");
     }
 
     public void div(String suffix) {
         if(suffix.equals("f"))
             writeToFile("\tdivf");
         else
-            writeToFile("\tdiv");
+            writeToFile("\tdivi");
     }
 
     public void mod(String suffix) {
         if(suffix.equals("f"))
             writeToFile("\tdivf");
         else
-            writeToFile("\tdiv");
+            writeToFile("\tdivi");
     }
 
     // Comparison operations
@@ -124,42 +119,42 @@ public class CodeGenerator {
         if(suffix.equals("f"))
             writeToFile("\tgtf");
         else
-            writeToFile("\tgt");
+            writeToFile("\tgti");
     }
 
     public void lt(String suffix) {
         if(suffix.equals("f"))
             writeToFile("\tltf");
         else
-            writeToFile("\tlt");
+            writeToFile("\tlti");
     }
 
     public void ge(String suffix) {
         if(suffix.equals("f"))
             writeToFile("\tgef");
         else
-            writeToFile("\tge");
+            writeToFile("\tgei");
     }
 
     public void le(String suffix) {
         if(suffix.equals("f"))
             writeToFile("\tlef");
         else
-            writeToFile("\tle");
+            writeToFile("\tlei");
     }
 
     public void eq(String suffix) {
         if(suffix.equals("f"))
             writeToFile("\teqf");
         else
-            writeToFile("\teq");
+            writeToFile("\teqi");
     }
 
     public void ne(String suffix) {
         if(suffix.equals("f"))
             writeToFile("\tnef");
         else
-            writeToFile("\tne");
+            writeToFile("\tnei");
     }
 
     // Logical operations
@@ -179,32 +174,15 @@ public class CodeGenerator {
         switch (suffix) {
             case "b" -> writeToFile("\toutb");
             case "f" -> writeToFile("\toutf");
-            default -> writeToFile("\tout");
+            default -> writeToFile("\touti");
         }
     }
     public void in(String suffix) {
         switch (suffix) {
             case "b" -> writeToFile("\tinb");
             case "f" -> writeToFile("\tinf");
-            default -> writeToFile("\tin");
+            default -> writeToFile("\tini");
         }
-    }
-
-    // Conversion instructions
-    public void b2i() {
-        writeToFile("\tb2i");
-    }
-
-    public void i2f() {
-        writeToFile("\ti2f");
-    }
-
-    public void f2i() {
-        writeToFile("\tf2i");
-    }
-
-    public void i2b() {
-        writeToFile("\ti2b");
     }
 
     // Label definition
@@ -213,7 +191,7 @@ public class CodeGenerator {
     }
 
     public String nextLabel() {
-        String label = String.format("label%d:", labelCounter);
+        String label = String.format("label%d", labelCounter);
         labelCounter++;
         return label;
 
@@ -234,7 +212,7 @@ public class CodeGenerator {
 
     // Function instructions
     public void call(String id) {
-        writeToFile(String.format("call %s", id));
+        writeToFile(String.format("\tcall %s", id));
     }
 
     public void enter(int bytes) {
@@ -259,5 +237,4 @@ public class CodeGenerator {
     }
 
     public void newLine() {writeToFile("");}
-
 }

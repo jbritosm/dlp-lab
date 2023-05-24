@@ -37,7 +37,7 @@ public class AddressCGVisitor extends AbstractCGVisitor<Object, Void> {
         VariableDefinition variableDefinition = (VariableDefinition) variableExpression.getDefinition();
 
         if(variableDefinition.getScope() == 0) {
-            cg.push("i", variableDefinition.getOffset());
+            cg.push("a", variableDefinition.getOffset());
         } else {
             cg.push("bp", 0);
             cg.push("i", variableDefinition.getOffset());
@@ -48,7 +48,7 @@ public class AddressCGVisitor extends AbstractCGVisitor<Object, Void> {
     }
 
     /**
-     * address[[ArrayIndexExpression : expression1 -> expression2 expression2]]() = {
+     * address[[ArrayIndexExpression : expression1 -> expression2 expression3]]() = {
      *     address[[expression2]]
      *     value[[expression3]]
      *     <pushi> expression2.type.numberOfBytes
@@ -61,7 +61,7 @@ public class AddressCGVisitor extends AbstractCGVisitor<Object, Void> {
         arrayIndexExpression.getIndexed().accept(this, parameter);
         arrayIndexExpression.getIndexer().accept(valueCGVisitor, parameter);
 
-        cg.push("i", arrayIndexExpression.getIndexed().getType().numberOfBytes());
+        cg.push("i", arrayIndexExpression.getType().numberOfBytes());
         cg.mul("i");
         cg.add("i");
 

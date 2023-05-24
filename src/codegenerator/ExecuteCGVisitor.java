@@ -43,8 +43,9 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Object, Void>{
             if(definition instanceof VariableDefinition) definition.accept(this, parameter);
         });
 
-        cg.comment("Invocation to the main function");
-        cg.call("main");
+        cg.newLine();
+        cg.writeToFile("' * Invocation to the main function");
+        cg.writeToFile("call main");
         cg.halt();
 
         cg.newLine();
@@ -95,7 +96,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Object, Void>{
 
         // Comment all the function parameters in order to check everything is working
         // as intended.
-        cg.comment("Parameters");
+        cg.writeToFile("\t' * Parameters");
         functionType.getArguments().forEach(variableDefinition -> variableDefinition.accept(this, parameter));
         // Get bytes of the parameters
         int argumentBytes = functionDefinition.argumentsNumberOfBytes();
@@ -112,20 +113,13 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Object, Void>{
                 statementList.add(statement);
         });
 
-        cg.comment("Local variables");
+        cg.writeToFile("\t' * Local variables");
         // Execute local variables of the function
         variableDefinitionList.forEach(variableDefinition -> variableDefinition.accept(this, parameter));
         // Get bytes of local variables
         int localVariableBytes = functionDefinition.localsNumberOfBytes();
         cg.enter(localVariableBytes);
-
-        // Execute each non variable definition statement in the function body passing as parameter
-        // the function definition in order for all the statements to know the returnType of the
-        // function.
-        if(!statementList.isEmpty()) {
-            cg.newLine();
-            cg.line(statementList.get(0).getLine());
-        }
+        cg.newLine();
 
         statementList.forEach(statement -> statement.accept(this, functionDefinition));
 
@@ -149,7 +143,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Object, Void>{
      */
     @Override
     public Void visit(VariableDefinition variableDefinition, Object parameter) {
-        cg.comment(String.format("%s %s (offset %d)", variableDefinition.getType().getTypeExpression()
+        cg.writeToFile(String.format("\t' * %s %s (offset %d)", variableDefinition.getType().getTypeExpression()
                                                     , variableDefinition.getName()
                                                     , variableDefinition.getOffset()));
 
@@ -164,7 +158,8 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Object, Void>{
      */
     @Override
     public Void visit(AssignmentStatement assignmentStatement, Object parameter) {
-        cg.comment("Assignment");
+        cg.line(assignmentStatement.getLine());
+        cg.writeToFile("\t' * Assignment");
         assignmentStatement.getLeft().accept(addressCGVisitor, parameter);
         assignmentStatement.getRight().accept(valueCGVisitor, parameter);
         cg.store(assignmentStatement.getLeft().getType().getSuffix());
@@ -180,10 +175,13 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Object, Void>{
     */
     @Override
     public Void visit(PrintStatement printStatement, Object parameter) {
-        cg.comment("Print");
         printStatement.getPrintExpressions().forEach(expression -> {
+            cg.line(printStatement.getLine());
+            cg.writeToFile("\t' * Write");
             expression.accept(valueCGVisitor, parameter);
-            cg.out(expression.getType().getSuffix());}
+            cg.out(expression.getType().getSuffix());
+            cg.newLine();
+        }
         );
 
         cg.newLine();
@@ -198,11 +196,13 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Object, Void>{
      */
     @Override
     public Void visit(ReadStatement readStatement, Object parameter) {
-        cg.comment("Read");
         readStatement.getReadExpressions().forEach(expression -> {
+            cg.line(readStatement.getLine());
+            cg.writeToFile("\t' * Read");
             expression.accept(addressCGVisitor, parameter);
             cg.in(expression.getType().getSuffix());
             cg.store(expression.getType().getSuffix());
+            cg.newLine();
         });
 
         cg.newLine();
@@ -218,9 +218,14 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Object, Void>{
      */
     @Override
     public Void visit(FunctionInvocation functionInvocation, Object parameter) {
-        cg.comment("Function Invocation");
+        cg.line(functionInvocation.getLine());
         functionInvocation.getArguments().forEach(expression -> expression.accept(valueCGVisitor, parameter));
         cg.call(functionInvocation.getVariableExpression().getName());
+
+        FunctionType functionType = (FunctionType) functionInvocation.getVariableExpression().getType();
+
+        if(!(functionType.getReturnType() instanceof VoidType))
+            cg.pop(functionType.getReturnType().getSuffix());
 
         cg.newLine();
         return null;
@@ -240,7 +245,8 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Object, Void>{
      */
     @Override
     public Void visit(IfElseStatement ifElseStatement, Object parameter) {
-        cg.comment("IfElse");
+        cg.line(ifElseStatement.getLine());
+        cg.writeToFile("\t' * IfElse");
         String elseBody = cg.nextLabel();
         String exitIf = cg.nextLabel();
 
@@ -270,7 +276,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Object, Void>{
      */
     @Override
     public Void visit(ReturnStatement returnStatement, Object parameter) {
-        cg.comment("Return");
+        cg.writeToFile("\t' * Return");
         returnStatement.getReturnExpression().accept(valueCGVisitor, parameter);
         FunctionDefinition functionDefinition = (FunctionDefinition) parameter;
 
@@ -301,16 +307,30 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Object, Void>{
      */
     @Override
     public Void visit(WhileStatement whileStatement, Object parameter) {
-        cg.comment("While");
+        cg.line(whileStatement.getLine());
+        cg.writeToFile("\t' * While");
+        cg.newLine();
+
         String enterLoop = cg.nextLabel();
         String exitLoop = cg.nextLabel();
 
-
+        cg.line(whileStatement.getLine());
         cg.label(enterLoop);
+
+        // Check condition and if 0 exit loop, enter loop otherwise.
         whileStatement.getCondition().accept(valueCGVisitor, parameter);
         cg.jz(exitLoop);
+
+        // Here starts the while body
+        cg.writeToFile("\t' * While body");
+        cg.newLine();
+
         whileStatement.getBody().forEach(statement -> statement.accept(this, parameter));
+
+        // Jump to the start of the loop
         cg.jmp(enterLoop);
+
+        // Exit loop
         cg.label(exitLoop);
 
         cg.newLine();

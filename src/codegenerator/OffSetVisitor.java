@@ -4,6 +4,7 @@ import ast.definition.FunctionDefinition;
 import ast.definition.VariableDefinition;
 import ast.type.FunctionType;
 import ast.type.RecordField;
+import ast.type.RecordType;
 import examples.ast.Variable;
 import semantic.AbstractVisitor;
 
@@ -32,6 +33,10 @@ public class OffSetVisitor extends AbstractVisitor<Void, Void> {
 
     @Override
     public Void visit(FunctionType functionType, Void parameter) {
+        // Each time we enter a new function we reset the bytes of
+        // the local variables
+        localVarBytes = 0;
+
         List<VariableDefinition> arguments = functionType.getArguments();
         VariableDefinition varDef;
 
@@ -47,9 +52,16 @@ public class OffSetVisitor extends AbstractVisitor<Void, Void> {
     }
 
     @Override
-    public Void visit(RecordField recordField, Void parameter) {
-        recordField.setOffset(globalVarBytes);
-        globalVarBytes += recordField.getFieldType().numberOfBytes();
+    public Void visit(RecordType recordType, Void parameter) {
+        super.visit(recordType, parameter);
+
+        int recordFieldBytes = 0;
+
+        for(RecordField field : recordType.getFields()) {
+            field.setOffset(recordFieldBytes);
+            recordFieldBytes += field.getFieldType().numberOfBytes();
+        }
+
         return null;
     }
 }

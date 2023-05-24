@@ -83,6 +83,9 @@ public abstract class AbstractType extends AbstractASTNode implements Type {
 
     @Override
     public String getSuffix() {
-        return null;
+        throw new IllegalStateException("No suffix for this type.");
     }
+
+    @Override
+    public String convertTo(Type type) { throw new IllegalStateException(String.format("Cannot perform conversion from %s to %s", this.getTypeExpression(), type.getTypeExpression())); }
 }

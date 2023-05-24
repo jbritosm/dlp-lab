@@ -1,8 +1,11 @@
 package codegenerator;
 
 import ast.expression.*;
+import ast.functioninvocation.FunctionInvocation;
+import ast.type.FunctionType;
 import ast.type.IntType;
 import ast.type.RealType;
+import ast.type.VoidType;
 import semantic.AbstractVisitor;
 
 public class ValueCGVisitor extends AbstractCGVisitor<Object, Void> {
@@ -127,7 +130,6 @@ public class ValueCGVisitor extends AbstractCGVisitor<Object, Void> {
         arithmeticExpression.getRight().accept(this, parameter);
 
         String suffix = arithmeticExpression.getType().getSuffix();
-
         switch (arithmeticExpression.getOperator()) {
             case "+" -> cg.add(suffix);
             case "-" -> cg.sub(suffix);
@@ -141,11 +143,15 @@ public class ValueCGVisitor extends AbstractCGVisitor<Object, Void> {
 
     /**
      * value[[CastExpression : expression -> type expression]]() =
-     *  value[[expression]]
+     *      value[[expression2]]
+     *      expression2.type.convertTo(type);
      *
      */
     @Override
     public Void visit(CastExpression castExpression, Object parameter) {
+        castExpression.getExpressionToCast().accept(this, parameter);
+        cg.writeToFile(castExpression.getExpressionToCast().getType().convertTo(castExpression.getTargetType()));
+
         return null;
     }
 
@@ -206,4 +212,50 @@ public class ValueCGVisitor extends AbstractCGVisitor<Object, Void> {
         return null;
     }
 
+    /**
+     * value[[ArrayIndexExpression : expression1 -> expression2 expression3]]() = {
+     *     address[[expression1]]
+     *     <load> expression1.type.suffix
+     *
+     * }
+     */
+    @Override
+    public Void visit(ArrayIndexExpression arrayIndexExpression, Object parameter) {
+        arrayIndexExpression.accept(addressCGVisitor, parameter);
+        cg.load(arrayIndexExpression.getType().getSuffix());
+
+        return null;
+    }
+
+    /**
+     * value[[FieldAccessExpression : expression1 -> expression2 ID]]() = {
+     *      address[[expression1]]
+     *      <load> expression1.type.suffix
+     * }
+     */
+    @Override
+    public Void visit(FieldAccessExpression fieldAccessExpression, Object parameter) {
+        fieldAccessExpression.accept(addressCGVisitor, parameter);
+        cg.load(fieldAccessExpression.getType().getSuffix());
+
+        return null;
+    }
+
+    /**
+     * value[[FunctionInvocation : expression1 -> expression2 expression3*]]() = {
+     *      expression3*.forEach(expression -> value[[expression]])
+     *      <call> expression1.name
+     *
+     *      if(!(expression1.type.returnType instanceof VoidType))
+     *          <pop> expression1.type.suffix
+     * }
+     */
+    @Override
+    public Void visit(FunctionInvocation functionInvocation, Object parameter) {
+        functionInvocation.getArguments().forEach(expression -> expression.accept(this, parameter));
+
+        cg.call(functionInvocation.getVariableExpression().getName());
+
+        return null;
+    }
 }

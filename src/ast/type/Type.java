@@ -23,4 +23,5 @@ public interface Type extends ASTNode {
     Type checkArgumentTypes(List<Type> types, ASTNode node);
     int numberOfBytes();
     String getSuffix();
+    String convertTo(Type type);
 }
