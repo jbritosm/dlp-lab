@@ -225,10 +225,6 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
 
         return null;
     }
-
-    /*
-    * Como se infiere el tipo de la expresion logica dentro del if, si el tipo de la expresion es nulo.
-    * */
     @Override
     public Void visit(IfElseStatement ifElseStatement, Type parameter) {
         super.visit(ifElseStatement, null);
@@ -251,6 +247,8 @@ public class TypeCheckingVisitor extends AbstractVisitor<Type, Void> {
     @Override
     public Void visit(FunctionDefinition functionDefinition, Type parameter) {
         super.visit(functionDefinition, ((FunctionType) functionDefinition.getType()).getReturnType());
+
+
         return null;
     }
 

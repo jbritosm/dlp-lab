@@ -16,8 +16,10 @@ public class AddressCGVisitor extends AbstractCGVisitor<Object, Void> {
 
     public AddressCGVisitor(CodeGenerator cg) {
         super(cg);
+    }
 
-        valueCGVisitor = new ValueCGVisitor();
+    public void setValueCGVisitor(ValueCGVisitor valueCGVisitor) {
+        this.valueCGVisitor = valueCGVisitor;
     }
 
     /**
@@ -35,11 +37,11 @@ public class AddressCGVisitor extends AbstractCGVisitor<Object, Void> {
         VariableDefinition variableDefinition = (VariableDefinition) variableExpression.getDefinition();
 
         if(variableDefinition.getScope() == 0) {
-            cg.pusha(variableDefinition.getOffset());
+            cg.push("i", variableDefinition.getOffset());
         } else {
-            cg.pushbp();
-            cg.push(variableDefinition.getOffset());
-            cg.add();
+            cg.push("bp", 0);
+            cg.push("i", variableDefinition.getOffset());
+            cg.add("i");
         }
 
         return null;
@@ -59,9 +61,9 @@ public class AddressCGVisitor extends AbstractCGVisitor<Object, Void> {
         arrayIndexExpression.getIndexed().accept(this, parameter);
         arrayIndexExpression.getIndexer().accept(valueCGVisitor, parameter);
 
-        cg.push(arrayIndexExpression.getIndexed().getType().numberOfBytes());
-        cg.mul();
-        cg.add();
+        cg.push("i", arrayIndexExpression.getIndexed().getType().numberOfBytes());
+        cg.mul("i");
+        cg.add("i");
 
         return null;
     }
@@ -83,8 +85,8 @@ public class AddressCGVisitor extends AbstractCGVisitor<Object, Void> {
 
         fieldAccessExpression.getAccessed().accept(this, parameter);
         int offset = record.getField(fieldAccessExpression.getName()).getOffset();
-        cg.push(offset);
-        cg.add();
+        cg.push("i", offset);
+        cg.add("i");
 
         return null;
     }

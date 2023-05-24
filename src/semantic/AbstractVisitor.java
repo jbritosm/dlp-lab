@@ -20,6 +20,32 @@ public class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
     public TR visit(FunctionDefinition functionDefinition, TP parameter) {
         functionDefinition.getType().accept(this, parameter);
         functionDefinition.getStatements().forEach(statement -> statement.accept(this, parameter));
+
+        FunctionType functionType = ((FunctionType) functionDefinition.getType());
+
+        // If returnType is void type check it has no return statemet.
+        if(functionType.getReturnType() instanceof VoidType)
+            functionDefinition.getStatements().forEach(statement -> {
+                if(statement instanceof ReturnStatement)
+                    // Makes new error type, should stop program execution
+                    new ErrorType("A void function cant have a return statement", statement.getLine(), statement.getColumn());
+            });
+        else {
+            boolean hasReturn = false;
+            int line = 0;
+            int column = 0;
+            for(Statement statement : functionDefinition.getStatements()) {
+                if(statement instanceof ReturnStatement) {
+                    hasReturn = true;
+                    line = statement.getLine();
+                    column = statement.getColumn();
+                    break;
+                }
+            }
+            if(!hasReturn)
+                new ErrorType("A void function cant have a return statement", line, column);
+        }
+
         return null;
     }
 

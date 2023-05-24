@@ -54,6 +54,10 @@ public class CharType extends AbstractType {
             return t;
         if(t instanceof IntType)
             return t;
+        if(t instanceof RealType)
+            return t;
+        if(t instanceof ErrorType)
+            return t;
         return new ErrorType(String.format("Char type cannot be casted to %s type.", t), node.getLine(), node.getColumn());
     }
 

@@ -39,23 +39,17 @@ public class FunctionType extends AbstractType {
 
     @Override
     public Type checkArgumentTypes(List<Type> types, ASTNode node) {
-        Type argumentInvocation;
-        Type argumentDefinition;
 
-        StringBuilder msg = new StringBuilder();
-
-        if(types.size() != arguments.size()) {
-            msg.append(String.format("Invalid number of parameters passed; Passed: %d, Requested: %d", types.size(), arguments.size()));
-        } else {
-            for(int i = 0; i < types.size(); i++) {
-                argumentInvocation = types.get(i);
-                argumentDefinition = arguments.get(i).getType();
-                if(!(argumentInvocation.equals(argumentDefinition)))
-                    msg.append(String.format("\nFunction invocation argument at index: %d has mismatched type %s, requested type %s.", i, argumentInvocation, argumentDefinition));
-            }
+        // Check the number of the parameters
+        if(types.size() != arguments.size())
+            return new ErrorType(String.format("Invalid number of parameters passed; Passed: %d, Requested: %d", types.size(), arguments.size()), node.getLine(), node.getColumn());
+        // Check the type of the parameters
+        for(int i = 0; i < types.size(); i++) {
+            if(!(types.get(i).equals(arguments.get(i).getType())))
+                return new ErrorType(String.format("\nFunction invocation argument at index: %d has mismatched type %s, requested type %s.", i, types.get(i), arguments.get(i).getType()), node.getLine(), node.getColumn());
         }
-        if(msg.length() == 0) return this;
-        return new ErrorType(msg.toString(), node.getLine(), node.getColumn());
+
+        return returnType;
     }
 
     @Override
