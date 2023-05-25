@@ -227,11 +227,11 @@ public class CodeGenerator {
 
     // Debugging info
     public void source() {
-        writeToFile(String.format("#source\t%s", input));
+        writeToFile(String.format("#SOURCE\t\"%s\"", input));
     }
 
     public void line(int line) {
-        writeToFile(String.format("#line\t%d", line));
+        writeToFile(String.format("#LINE\t%d", line));
     }
 
     public void newLine() {writeToFile("");}
