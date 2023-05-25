@@ -6,7 +6,6 @@ public class CodeGenerator {
 
     private PrintWriter out;
     private String input;
-    private String output;
     private int labelCounter;
 
     public CodeGenerator(String output, String input) {
@@ -16,7 +15,6 @@ public class CodeGenerator {
         try {
             this.out = new PrintWriter(output);
             this.input = input;
-            this.output = output;
         } catch(FileNotFoundException e) {
             e.printStackTrace();
         }
