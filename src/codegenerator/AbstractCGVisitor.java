@@ -126,7 +126,7 @@ public class AbstractCGVisitor<TP, TR> implements Visitor<TP, TR> {
 
     @Override
     public TR visit(PrintStatement printStatement, TP parameter) {
-        throwException("PrintStatemet");
+        throwException("PrintStatement");
         return null;
     }
 
